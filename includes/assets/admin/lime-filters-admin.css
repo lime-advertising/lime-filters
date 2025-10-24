@@ -1,0 +1,14 @@
+.lf-attr-raw.lf-attr-raw--hidden{display:none}
+.lf-attr-control{position:relative;border:1px solid #ccd0d4;border-radius:4px;padding:6px;background:#fff;max-width:480px}
+.lf-attr-control:focus-within{border-color:#2271b1;box-shadow:0 0 0 1px #2271b1}
+.lf-attr-pills{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px 0;padding:0}
+.lf-attr-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:999px;background:#f0f0f1;font-size:12px;line-height:1.5}
+.lf-attr-pill button{border:0;background:transparent;cursor:pointer;padding:0;color:#50575e;font-size:14px;line-height:1}
+.lf-attr-pill button:hover{color:#d63638}
+.lf-attr-search{width:100%;border:0;outline:none;font-size:13px;padding:4px 2px}
+.lf-attr-suggestions{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:20;border:1px solid #ccd0d4;border-radius:4px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.08);max-height:220px;overflow:auto}
+.lf-attr-suggestions[hidden]{display:none}
+.lf-attr-suggestion{display:block;width:100%;text-align:left;padding:8px 10px;border:0;background:transparent;cursor:pointer;font-size:13px;line-height:1.4;color:#1d2327}
+.lf-attr-suggestion:hover,
+.lf-attr-suggestion.is-active{background:#f0f0f1}
+.lf-attr-suggestion.is-empty{cursor:default;color:#646970}

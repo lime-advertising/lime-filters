@@ -1,0 +1,32 @@
+.lf-bg-preview {
+  width: 220px;
+  height: 220px;
+  border: 1px solid #ccd0d4;
+  background-color: #f6f7f7;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.lf-bg-preview__placeholder {
+  color: #555;
+  font-size: 13px;
+}
+
+.lf-bg-preview.has-image .lf-bg-preview__placeholder {
+  display: none;
+}
+
+.lf-bg-actions .button {
+  margin-right: 8px;
+}
+
+.lf-bg-actions .button:last-child {
+  margin-right: 0;
+}

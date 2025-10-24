@@ -1,0 +1,121 @@
+.lf-product-title-share {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lf-product-title-share--with-share {
+  gap: 20px;
+}
+
+.lf-product-title-share__title {
+  margin: 0;
+}
+
+.lf-product-title-share__share {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lf-product-title-share__share-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.lf-product-title-share__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.lf-product-title-share__share--stacked .lf-product-title-share__buttons {
+  flex-direction: column;
+}
+
+.lf-product-title-share__buttons .lf-product-title-share__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  margin: 0;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--lf-text, #222);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: transform 0.2s ease, background 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.lf-product-title-share__buttons .lf-product-title-share__button:hover,
+.lf-product-title-share__buttons .lf-product-title-share__button:focus {
+  transform: translateY(-1px);
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.lf-product-title-share__button svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.lf-product-title-share__button--copy {
+  background: var(--lf-accent, #dd7210);
+  color: #fff;
+}
+
+.lf-product-title-share__buttons .lf-product-title-share__button--copy:hover,
+.lf-product-title-share__buttons .lf-product-title-share__button--copy:focus {
+  background: #c1620c;
+}
+
+.lf-product-title-share__button-label {
+  font-size: 14px;
+}
+
+.lf-product-title-share__button .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.lf-product-title-share--with-share .lf-product-title-share__title {
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .lf-product-title-share__buttons {
+    gap: 8px;
+  }
+
+  .lf-product-title-share__buttons .lf-product-title-share__button {
+    padding: 9px 14px;
+    font-size: 13px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .lf-product-title-share__share-label {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .lf-product-title-share__buttons .lf-product-title-share__button {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f5f5f5;
+  }
+
+  .lf-product-title-share__buttons .lf-product-title-share__button:hover,
+  .lf-product-title-share__buttons .lf-product-title-share__button:focus {
+    background: rgba(255, 255, 255, 0.16);
+  }
+}

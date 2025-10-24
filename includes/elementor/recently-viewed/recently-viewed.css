@@ -1,0 +1,63 @@
+.lf-recently-viewed {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.lf-recently-viewed__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lf-recently-viewed__heading {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--lf-text, #ffffff);
+}
+
+.lf-recently-viewed__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--lf-rv-cols, 4), minmax(0, 1fr));
+  gap: 18px;
+}
+
+.lf-recently-viewed[data-columns="3"] .lf-recently-viewed__grid {
+  --lf-rv-cols: 3;
+}
+
+.lf-recently-viewed[data-columns="2"] .lf-recently-viewed__grid {
+  --lf-rv-cols: 2;
+}
+
+.lf-recently-viewed__item .lf-product {
+  height: 100%;
+}
+
+.lf-recently-viewed__empty {
+  padding: 24px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  font-size: 15px;
+}
+
+@media (max-width: 1024px) {
+  .lf-recently-viewed__grid {
+    --lf-rv-cols: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .lf-recently-viewed__grid {
+    --lf-rv-cols: 2;
+  }
+}
+
+@media (max-width: 540px) {
+  .lf-recently-viewed__grid {
+    --lf-rv-cols: 1;
+  }
+}

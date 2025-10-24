@@ -1,0 +1,780 @@
+.lf-account-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  color: var(--lf-text, #222);
+}
+
+.lf-account-dashboard__cols {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) 1fr;
+  gap: 32px;
+}
+
+.lf-account-dashboard__nav {
+  background-color: #2b2b2b;
+  background-image: url(/wp-content/plugins/lime-filters/includes/assets/images/bg.png);
+  border: 1px solid var(--lf-border, #e0e0e0);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 10px 30px -20px rgba(0, 0, 0, 0.2);
+}
+
+.lf-account-dashboard__nav-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lf-account-dashboard__nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  color: inherit;
+  text-decoration: none;
+}
+
+.lf-account-dashboard__nav-item:hover {
+  border-color: var(--lf-border, #e0e0e0);
+  transform: translateY(-1px);
+}
+
+.lf-account-dashboard__nav-item.is-active {
+  border-color: var(--lf-accent, #dd7210);
+  background: rgba(221, 114, 16, 0.08);
+}
+
+.lf-account-dashboard__nav-icon {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.06);
+  font-size: 20px;
+}
+
+.lf-account-dashboard__nav-content {
+  flex: 1;
+}
+
+.lf-account-dashboard__nav-title {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.lf-account-dashboard__nav-desc {
+  display: block;
+  font-size: 13px;
+  color: var(--wdtBodyTxtColor);
+}
+
+.lf-account-dashboard__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--lf-accent, #dd7210);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.lf-account-dashboard__icon-svg {
+  width: 20px;
+  height: 20px;
+}
+
+.lf-account-dashboard__main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.lf-account-dashboard__header h2 {
+  font-size: 28px;
+  margin: 0 0 8px;
+}
+
+.lf-account-dashboard__header p {
+  margin: 0;
+  color: #fff;
+}
+
+.lf-account-dashboard__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.lf-account-dashboard__stat {
+  background-color: #2b2b2b;
+  background-image: url(/wp-content/plugins/lime-filters/includes/assets/images/bg.png);
+  border: 1px solid var(--lf-border, #e0e0e0);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 12px 32px -26px rgba(0, 0, 0, 0.3);
+}
+
+.lf-account-dashboard__stat-value {
+  display: block;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--lf-accent, #dd7210);
+}
+
+.lf-account-dashboard__stat-label {
+  font-size: 14px;
+  color: var(--wdtBodyTxtColor);
+}
+
+.lf-account-dashboard__section {
+  background-color: #2b2b2b;
+  background-image: url(/wp-content/plugins/lime-filters/includes/assets/images/bg.png);
+  border: 1px solid var(--lf-border, #e0e0e0);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 12px 32px -26px rgba(0, 0, 0, 0.3);
+}
+
+.lf-account-dashboard__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.lf-account-dashboard__section-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.lf-account-dashboard__link {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--lf-accent, #dd7210);
+  text-decoration: none;
+}
+
+.lf-account-dashboard__link:hover {
+  text-decoration: underline;
+}
+
+.lf-account-dashboard__orders {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lf-account-dashboard__order {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.lf-account-dashboard__order:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.lf-account-dashboard__order-number {
+  font-weight: 600;
+}
+
+.lf-account-dashboard__order-date {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.lf-account-dashboard__order-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lf-account-dashboard__order-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.lf-account-dashboard__order-status--completed {
+  background: rgba(49, 174, 95, 0.15);
+  color: #1f8b4a;
+}
+
+.lf-account-dashboard__order-status--processing {
+  background: rgba(221, 114, 16, 0.15);
+  color: var(--lf-accent, #dd7210);
+}
+
+.lf-account-dashboard__order-total {
+  font-weight: 600;
+}
+
+.lf-account-dashboard__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid var(--lf-accent, #dd7210);
+  color: var(--lf-accent, #dd7210);
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.lf-account-dashboard__button:hover {
+  background: var(--lf-accent, #dd7210);
+  color: #fff;
+}
+
+.lf-account-dashboard__button--primary {
+  background: var(--lf-accent, #dd7210);
+  color: #fff;
+  border-color: var(--lf-accent, #dd7210);
+}
+
+.lf-account-dashboard__button--primary:hover {
+  filter: brightness(0.92);
+}
+
+.lf-account-dashboard__address-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.lf-account-dashboard__address-card {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lf-account-dashboard__address-card h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.lf-account-dashboard__address-content {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.lf-account-dashboard__wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.lf-account-dashboard__wishlist-item .lf-product {
+  height: 100%;
+}
+
+.lf-account-dashboard__wishlist-item .lf-product__actions .add_to_cart_button,
+.lf-account-dashboard__wishlist-item
+  .lf-product__actions
+  .single_add_to_cart_button {
+  display: none !important;
+}
+
+.lf-account-dashboard__support-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  background: linear-gradient(
+    120deg,
+    rgba(221, 114, 16, 0.12),
+    rgba(221, 114, 16, 0.05)
+  );
+}
+
+.lf-account-dashboard__support-card h3 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.lf-account-dashboard__support-card p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.lf-account-dashboard__support-content {
+  flex: 1;
+}
+
+.lf-account-dashboard__empty {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.lf-account-dashboard__section--endpoint {
+  padding-bottom: 24px;
+}
+
+.lf-account-dashboard__endpoint {
+  display: block;
+}
+
+.lf-account-dashboard__endpoint
+  th.woocommerce-orders-table__cell.woocommerce-orders-table__cell-order-number {
+  vertical-align: middle;
+  font-size: 20px;
+  background: transparent;
+  color: #dd7210;
+}
+
+.lf-account-dashboard__endpoint
+  .woocommerce-orders-table__cell.woocommerce-orders-table__cell-order-actions
+  a {
+  margin: 0;
+  margin-inline: auto;
+  display: block;
+  width: fit-content;
+}
+
+.lf-account-dashboard__endpoint > *:last-child {
+  margin-bottom: 0;
+}
+
+.lf-account-dashboard__endpoint form,
+.lf-account-dashboard__endpoint table {
+  width: 100%;
+}
+
+.lf-account-dashboard__endpoint table.shop_table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.lf-account-dashboard__endpoint table.shop_table thead th {
+  background: rgba(221, 114, 16, 0.07);
+  color: var(--lf-text, #222);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.583);
+}
+
+.lf-account-dashboard__endpoint table.shop_table thead th:first-child,
+.lf-account-dashboard__endpoint table.shop_table tbody td:first-child,
+.lf-account-dashboard__endpoint table.shop_table tfoot th:first-child {
+  padding-left: 18px !important;
+  width: auto;
+  text-align: left;
+}
+
+.lf-account-dashboard__endpoint table.shop_table tbody td {
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  vertical-align: top;
+  font-size: 15px;
+}
+
+.lf-account-dashboard__endpoint table.shop_table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.lf-account-dashboard__endpoint table.shop_table tfoot th,
+.lf-account-dashboard__endpoint table.shop_table tfoot td {
+  padding: 12px 18px;
+  font-weight: 600;
+  font-size: 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.lf-account-dashboard__endpoint table.shop_table tfoot th {
+  text-align: left;
+}
+
+.lf-account-dashboard__endpoint table.shop_table tfoot td {
+  text-align: right;
+}
+
+.lf-account-dashboard__endpoint table.shop_table .product-name a {
+  color: var(--lf-text, #222);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lf-account-dashboard__endpoint table.shop_table .product-name a:hover {
+  color: var(--lf-accent, #dd7210);
+}
+
+.lf-account-dashboard__endpoint table.shop_table .product-quantity {
+  margin-left: 6px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.lf-account-dashboard__endpoint .woocommerce-order-details__title,
+.lf-account-dashboard__endpoint .woocommerce-column__title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  color: var(--lf-text, #222);
+}
+
+.lf-account-dashboard__endpoint .order-again {
+  margin-top: 20px;
+}
+
+.lf-account-dashboard__endpoint .order-again .button {
+  background: var(--lf-accent, #dd7210);
+  color: #fff;
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: filter 0.2s ease;
+}
+
+.lf-account-dashboard__endpoint .order-again .button:hover {
+  filter: brightness(0.9);
+}
+
+.lf-account-dashboard--logged-out {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background-color: #2b2b2b;
+  background-image: url(/wp-content/plugins/lime-filters/includes/assets/images/bg.png);
+  border: 1px solid var(--lf-border, #e0e0e0);
+  border-radius: 18px;
+  padding: 48px 36px;
+  box-shadow: 0 16px 48px -32px rgba(0, 0, 0, 0.35);
+}
+
+.lf-account-dashboard__auth {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  color: var(--lf-text, #222);
+}
+
+.lf-account-dashboard__auth-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lf-account-dashboard__auth-header h2 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--lf-text, #222);
+}
+
+.lf-account-dashboard__auth-header p {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.lf-account-dashboard__auth--split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+
+.lf-account-dashboard__auth-col {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--lf-border, #e0e0e0);
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left;
+  box-shadow: 0 12px 30px -28px rgba(0, 0, 0, 0.45);
+}
+
+.lf-account-dashboard__auth-col h3 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--lf-text, #222);
+}
+
+.lf-account-dashboard__auth p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.lf-account-dashboard__auth-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: rgba(221, 114, 16, 0.14);
+  color: var(--lf-accent, #dd7210);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lf-account-dashboard__auth-icon svg {
+  width: 34px;
+  height: 34px;
+}
+
+.lf-account-dashboard__auth-note {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.lf-account-dashboard__auth .lf-account-dashboard__button {
+  min-width: 220px;
+}
+
+.lf-account-dashboard__button--ghost {
+  background: transparent;
+  color: var(--lf-accent, #dd7210);
+  border-color: rgba(221, 114, 16, 0.35);
+}
+
+.lf-account-dashboard__button--ghost:hover {
+  background: rgba(221, 114, 16, 0.08);
+  color: var(--lf-accent, #dd7210);
+}
+
+.lf-account-dashboard__form-wrapper,
+.lf-account-dashboard__form {
+  width: 100%;
+}
+
+.lf-account-dashboard__auth .woocommerce-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.lf-account-dashboard__auth .woocommerce-form .form-row {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.lf-account-dashboard__auth .woocommerce-form label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  color: var(--lf-text, #222);
+}
+
+.lf-account-dashboard__auth .woocommerce-form .input-text,
+.lf-account-dashboard__auth .woocommerce-form input[type="text"],
+.lf-account-dashboard__auth .woocommerce-form input[type="email"],
+.lf-account-dashboard__auth .woocommerce-form input[type="password"] {
+  width: 100%;
+  border: 1px solid var(--lf-border, #e0e0e0);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #fff;
+  color: #000;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lf-account-dashboard__auth .woocommerce-form .input-text:focus {
+  border-color: var(--lf-accent, #dd7210);
+  box-shadow: 0 0 0 2px rgba(221, 114, 16, 0.15);
+  outline: none;
+}
+
+.lf-account-dashboard__auth .woocommerce-LostPassword {
+  font-size: 13px;
+  margin-top: -6px;
+}
+
+.lf-account-dashboard__auth .woocommerce-LostPassword a {
+  color: var(--lf-accent, #dd7210);
+  text-decoration: none;
+}
+
+.lf-account-dashboard__auth .woocommerce-LostPassword a:hover {
+  text-decoration: underline;
+}
+
+.lf-account-dashboard__auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lf-account-dashboard__auth .woocommerce-form .woocommerce-button,
+.lf-account-dashboard__auth .woocommerce-form button {
+  align-self: flex-start;
+  padding: 12px 20px;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.lf-account-dashboard__main > * {
+  margin: 0;
+}
+
+@media (max-width: 1024px) {
+  .lf-account-dashboard__cols {
+    grid-template-columns: 1fr;
+  }
+
+  .lf-account-dashboard__nav {
+    position: relative;
+    order: 2;
+  }
+
+  .lf-account-dashboard__main {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .lf-account-dashboard__stats {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  .lf-account-dashboard__order {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lf-account-dashboard__order-meta {
+    flex-wrap: wrap;
+  }
+
+  .lf-account-dashboard__wishlist-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lf-account-dashboard__auth--split {
+    grid-template-columns: 1fr;
+  }
+
+  .lf-account-dashboard--logged-out {
+    padding: 32px 22px;
+  }
+
+  .lf-account-dashboard__auth-col {
+    padding: 26px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .lf-account-dashboard,
+  .lf-account-dashboard__nav,
+  .lf-account-dashboard__section,
+  .lf-account-dashboard__stat {
+    background: rgba(255, 255, 255, 0.06);
+    color: #f5f5f5;
+  }
+
+  .lf-account-dashboard__nav-desc,
+  .lf-account-dashboard__header p,
+  .lf-account-dashboard__empty,
+  .lf-account-dashboard__order-date {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .lf-account-dashboard__address-card {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .lf-account-dashboard--logged-out {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: #f5f5f5;
+  }
+
+  .lf-account-dashboard__endpoint table.shop_table {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: none;
+  }
+
+  .lf-account-dashboard__endpoint table.shop_table thead th {
+    background: rgba(255, 255, 255, 0.12);
+    color: #f5f5f5;
+  }
+
+  .lf-account-dashboard__auth-col {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #f5f5f5;
+  }
+
+  .lf-account-dashboard__auth p {
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .lf-account-dashboard__auth-header h2,
+  .lf-account-dashboard__auth-col h3 {
+    color: #f5f5f5;
+  }
+
+  .lf-account-dashboard__auth-note {
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .lf-account-dashboard__button--ghost {
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #f5f5f5;
+  }
+
+  .lf-account-dashboard__button--ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+
+  .lf-account-dashboard__auth .woocommerce-form .input-text,
+  .lf-account-dashboard__auth .woocommerce-form input[type="text"],
+  .lf-account-dashboard__auth .woocommerce-form input[type="email"],
+  .lf-account-dashboard__auth .woocommerce-form input[type="password"] {
+    background: rgba(0, 0, 0, 0.35);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #f5f5f5;
+  }
+
+  .lf-account-dashboard__auth .woocommerce-form label {
+    color: rgba(255, 255, 255, 0.85);
+  }
+}

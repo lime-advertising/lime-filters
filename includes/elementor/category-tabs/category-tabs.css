@@ -1,0 +1,98 @@
+.lf-category-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.lf-category-tabs__nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.lf-category-tabs__nav .lf-category-tabs__tab {
+  appearance: none;
+  border: 1px solid rgba(213, 227, 252, 0.4);
+  background: rgba(12, 19, 38, 0.75);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  line-height: 1;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lf-category-tabs__nav .lf-category-tabs__tab:hover {
+  border-color: rgba(221, 114, 16, 0.6);
+  background: rgba(221, 114, 16, 0.2);
+}
+
+.lf-category-tabs__nav .lf-category-tabs__tab.is-active {
+  border-color: rgba(221, 114, 16, 0.85);
+  background: rgba(221, 114, 16, 0.35);
+  color: #fff;
+}
+
+.lf-category-tabs__panes {
+  position: relative;
+}
+
+.lf-category-tabs__pane {
+  display: none;
+}
+
+.lf-category-tabs__pane.is-active {
+  display: block;
+}
+
+.lf-category-tabs__empty {
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(12, 19, 38, 0.65);
+  border: 1px solid rgba(213, 227, 252, 0.35);
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+}
+
+.lf-category-tabs__slider .lf-products--slider {
+  display: block;
+  overflow: visible;
+}
+
+.lf-category-tabs__slider .lf-products--slider .swiper-wrapper {
+  display: flex;
+}
+
+.lf-category-tabs__slider .lf-products--slider .swiper-slide {
+  height: auto;
+}
+
+.lf-category-tabs__controls {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.lf-category-tabs__controls .lf-category-tabs__button {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(213, 227, 252, 0.45);
+  background: rgba(12, 19, 38, 0.85);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 20px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lf-category-tabs__controls .lf-category-tabs__button:hover {
+  border-color: rgba(221, 114, 16, 0.75);
+  background: rgba(221, 114, 16, 0.3);
+}

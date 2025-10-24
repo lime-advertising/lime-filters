@@ -1,0 +1,63 @@
+.lf-product-attributes {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.lf-product-attributes__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--lf-text, #1f2933);
+}
+
+.lf-attribute-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lf-attribute-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lf-attribute-group__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: rgba(17, 24, 39, 0.8);
+}
+
+.lf-attribute-group__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lf-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(213, 227, 252, 0.5);
+  background: rgba(12, 19, 38, 0.08);
+  color: var(--lf-text, #1f2933);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.lf-product-attributes--empty {
+  font-size: 0.85rem;
+  color: rgba(17, 24, 39, 0.6);
+  font-style: italic;
+}
+
+.lf-attribute-groups--grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}

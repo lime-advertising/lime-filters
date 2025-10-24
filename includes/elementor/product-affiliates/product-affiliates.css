@@ -1,0 +1,306 @@
+.lf-affiliates {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.lf-affiliates--empty {
+  padding: 20px;
+  border: 1px dashed var(--lf-border, rgba(255, 255, 255, 0.4));
+  text-align: center;
+}
+
+.lf-affiliates__title {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--lf-text, #fff);
+  font-weight: 700;
+}
+
+.lf-affiliates__grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(var(--lf-affiliates-mobile, 2), minmax(0, 1fr));
+}
+
+.lf-affiliates__button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  border-radius: 8px;
+  background: rgba(40, 40, 40, 0.9);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  min-height: 72px;
+}
+
+.lf-affiliates__button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 175, 55, 0.2),
+    transparent
+  );
+  transition: left 0.45s ease;
+}
+
+.lf-affiliates__button:hover::before {
+  left: 120%;
+}
+
+.lf-affiliates__button:hover {
+  border-color: rgba(212, 175, 55, 0.6);
+  background: rgba(50, 50, 50, 0.95);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.lf-affiliates__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.lf-affiliates__logo img {
+  max-height: 42px;
+  max-width: 100%;
+  object-fit: contain;
+  filter: invert(1) brightness(0.9);
+  transition: all 0.25s ease;
+}
+
+.lf-affiliates__button:hover img {
+  filter: invert(1) brightness(1.05);
+  transform: scale(1.04);
+}
+
+.lf-affiliates__button[href*="bestbuy"]:hover img,
+.lf-affiliates__button[href*="amazon"]:hover img {
+  filter: invert(1) sepia(1) saturate(3) hue-rotate(35deg) brightness(1.1);
+}
+
+.lf-affiliates__comparison {
+  margin-top: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.lf-affiliates__comparison::-webkit-scrollbar {
+  height: 6px;
+}
+
+.lf-affiliates__comparison::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+}
+
+.lf-affiliates__table {
+  min-width: 720px;
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(0, 0, 0, 0.25);
+  table-layout: fixed;
+  margin: 0;
+}
+
+.lf-affiliates__table th,
+.lf-affiliates__table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.lf-affiliates__table thead th {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.04);
+  font-weight: 700;
+}
+
+.lf-affiliates__table-store {
+  text-align: center;
+}
+
+.lf-affiliates__table-store img {
+  max-height: 32px;
+  max-width: 120px;
+  width: 100%;
+  object-fit: contain;
+  filter: invert(1) brightness(0.9);
+}
+
+.lf-affiliates__table-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 2px;
+  border-radius: 8px;
+  background: rgba(40, 40, 40, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  text-decoration: none;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  min-height: 70px;
+}
+
+.lf-affiliates__table-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 175, 55, 0.2),
+    transparent
+  );
+  transition: left 0.45s ease;
+}
+
+.lf-affiliates__table-link:hover::before {
+  left: 120%;
+}
+
+.lf-affiliates__table-link:hover {
+  border-color: rgba(212, 175, 55, 0.6);
+  background: rgba(50, 50, 50, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.lf-affiliates__table-link img {
+  max-height: 36px;
+  max-width: 110px;
+  width: 100%;
+  object-fit: contain;
+  filter: invert(1) brightness(0.92);
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.lf-affiliates__table-link:hover img {
+  transform: scale(1.04);
+  filter: invert(1) brightness(1.05);
+}
+
+.lf-affiliates__table-link[href*="bestbuy"]:hover img,
+.lf-affiliates__table-link[href*="amazon"]:hover img {
+  filter: invert(1) sepia(1) saturate(3) hue-rotate(35deg) brightness(1.1);
+}
+
+.lf-affiliates__table-label {
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  width: 220px;
+}
+
+.lf-affiliates__table .lf-affiliates__table-cell {
+  text-align: center;
+  vertical-align: middle;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.lf-affiliates__value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.lf-affiliates__value-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.lf-affiliates__value--yes .lf-affiliates__value-icon {
+  background: rgba(71, 179, 112, 0.2);
+  color: #55c26b;
+  border: 1px solid rgba(85, 194, 107, 0.35);
+}
+
+.lf-affiliates__value--no .lf-affiliates__value-icon {
+  background: rgba(204, 83, 83, 0.2);
+  color: #ff7b7b;
+  border: 1px solid rgba(255, 123, 123, 0.35);
+}
+
+.lf-affiliates__value-text {
+  display: inline-block;
+}
+
+@media (max-width: 768px) {
+  .lf-affiliates__table th,
+  .lf-affiliates__table td {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .lf-affiliates__table-label {
+    width: 160px;
+  }
+}
+
+.lf-affiliates__label {
+  font-size: 14px;
+  color: var(--lf-text, #fff);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (min-width: 768px) {
+  .lf-affiliates__grid {
+    grid-template-columns: repeat(
+      var(--lf-affiliates-tablet, 3),
+      minmax(0, 1fr)
+    );
+  }
+}
+
+@media (min-width: 1025px) {
+  .lf-affiliates__grid {
+    grid-template-columns: repeat(
+      var(--lf-affiliates-desktop, 4),
+      minmax(0, 1fr)
+    );
+  }
+}
