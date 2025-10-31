@@ -238,30 +238,31 @@ class LF_Helpers {
     }
 
     public static function affiliate_stores() {
+        $base = LF_PLUGIN_URL . 'includes/compare/icons/compare-icons/';
         $stores = [
             'amazon'         => [
                 'label' => __('Amazon', 'lime-filters'),
-                'logo'  => '/wp-content/plugins/wc-product-compare/icons/amazon.svg',
+                'logo'  => $base . 'amazon-ico.svg',
             ],
             'best_buy'       => [
                 'label' => __('Best Buy', 'lime-filters'),
-                'logo'  => '/wp-content/plugins/wc-product-compare/icons/best_buy.svg',
+                'logo'  => $base . 'best_buy-ico.svg',
             ],
             'rona'           => [
                 'label' => __('Rona', 'lime-filters'),
-                'logo'  => '/wp-content/plugins/wc-product-compare/icons/rona.svg',
+                'logo'  => $base . 'rona-ico.svg',
             ],
             'the_home_depot' => [
                 'label' => __('Home Depot', 'lime-filters'),
-                'logo'  => '/wp-content/plugins/wc-product-compare/icons/the_home_depot.svg',
+                'logo'  => $base . 'the_home_depot-ico.svg',
             ],
             'wayfair'        => [
                 'label' => __('Wayfair', 'lime-filters'),
-                'logo'  => '/wp-content/plugins/wc-product-compare/icons/wayfair.webp',
+                'logo'  => $base . 'wayfair-ico.svg',
             ],
             'walmart'        => [
                 'label' => __('Walmart', 'lime-filters'),
-                'logo'  => '/wp-content/plugins/wc-product-compare/icons/walmart.png',
+                'logo'  => $base . 'walmart-ico.svg',
             ],
         ];
 

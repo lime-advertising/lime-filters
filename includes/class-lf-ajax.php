@@ -625,17 +625,31 @@ class LF_AJAX
 
     protected static function get_compare_button($product)
     {
-        $product_id = $product->get_id();
-        if (!$product_id) {
+        if (!class_exists('LF_Product_Compare') || !LF_Product_Compare::is_enabled()) {
             return '';
         }
 
-        $label = apply_filters('lime_filters_compare_button_label', __('Compare', 'lime-filters'), $product);
+        if (!$product instanceof WC_Product) {
+            return '';
+        }
 
-        return sprintf(
-            '<button type="button" class="lf-button lf-button--ghost wcp-compare-button" data-product-id="%d">%s</button>',
-            (int) $product_id,
-            esc_html($label)
+        $button = LF_Product_Compare::button_markup($product);
+        if ($button === '') {
+            return '';
+        }
+
+        $button = preg_replace(
+            '/class="([^"]*)"/',
+            'class="$1 lf-button lf-button--ghost"',
+            $button,
+            1,
+            $count
         );
+
+        if ($count === 0) {
+            $button = str_replace('<button ', '<button class="lf-button lf-button--ghost" ', $button);
+        }
+
+        return $button;
     }
 }
