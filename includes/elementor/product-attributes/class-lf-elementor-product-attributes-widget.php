@@ -200,19 +200,31 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
         $wrapper_classes = ['lf-attribute-groups', 'lf-attribute-groups--pills'];
         $wrapper_classes[] = $layout === 'grid' ? 'lf-attribute-groups--grid' : 'lf-attribute-groups--list';
 
+        LF_Product_Variants::record_frontend_product($product);
+
+        $product_id  = $product->get_id();
+        $variant_map = LF_Product_Variants::get_variants_for_product($product_id);
+
         ob_start();
-        echo '<div class="' . esc_attr(implode(' ', $wrapper_classes)) . '">';
+        echo '<div class="' . esc_attr(implode(' ', $wrapper_classes)) . '" data-product-id="' . esc_attr($product_id) . '">';
         foreach ($attributes as $attribute) {
             if ($attribute->is_taxonomy()) {
                 $terms = wc_get_product_terms($product->get_id(), $attribute->get_name(), ['fields' => 'all']);
                 if (empty($terms)) {
                     continue;
                 }
+                $attr_slug = $attribute->get_name();
                 echo '<div class="lf-attribute-group">';
-                echo '<span class="lf-attribute-group__label">' . esc_html(wc_attribute_label($attribute->get_name())) . '</span>';
-                echo '<div class="lf-attribute-group__pills">';
+                echo '<span class="lf-attribute-group__label">' . esc_html(wc_attribute_label($attr_slug)) . '</span>';
+                echo '<div class="lf-attribute-group__pills" data-attribute="' . esc_attr($attr_slug) . '">';
                 foreach ($terms as $term) {
-                    echo '<span class="lf-pill" title="' . esc_attr($term->name) . '">' . esc_html($term->name) . '</span>';
+                    $term_slug   = $term->slug;
+                    $has_variant = isset($variant_map[$attr_slug][$term_slug]);
+                    $classes     = ['lf-pill'];
+                    if ($has_variant) {
+                        $classes[] = 'has-variant';
+                    }
+                    echo '<button type="button" class="' . esc_attr(implode(' ', $classes)) . '" title="' . esc_attr($term->name) . '" data-product-id="' . esc_attr($product_id) . '" data-attribute="' . esc_attr($attr_slug) . '" data-term="' . esc_attr($term_slug) . '" data-has-variant="' . ($has_variant ? '1' : '0') . '">' . esc_html($term->name) . '</button>';
                 }
                 echo '</div></div>';
             } else {
@@ -220,11 +232,18 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
                 if (empty($options)) {
                     continue;
                 }
+                $attr_slug = $attribute->get_name();
                 echo '<div class="lf-attribute-group">';
                 echo '<span class="lf-attribute-group__label">' . esc_html($attribute->get_name()) . '</span>';
-                echo '<div class="lf-attribute-group__pills">';
+                echo '<div class="lf-attribute-group__pills" data-attribute="' . esc_attr($attr_slug) . '">';
                 foreach ($options as $option) {
-                    echo '<span class="lf-pill" title="' . esc_attr($option) . '">' . esc_html($option) . '</span>';
+                    $term_slug   = sanitize_title($option);
+                    $has_variant = isset($variant_map[$attr_slug][$term_slug]);
+                    $classes     = ['lf-pill'];
+                    if ($has_variant) {
+                        $classes[] = 'has-variant';
+                    }
+                    echo '<button type="button" class="' . esc_attr(implode(' ', $classes)) . '" title="' . esc_attr($option) . '" data-product-id="' . esc_attr($product_id) . '" data-attribute="' . esc_attr($attr_slug) . '" data-term="' . esc_attr($term_slug) . '" data-has-variant="' . ($has_variant ? '1' : '0') . '">' . esc_html($option) . '</button>';
                 }
                 echo '</div></div>';
             }

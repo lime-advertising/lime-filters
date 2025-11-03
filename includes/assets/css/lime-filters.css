@@ -671,3 +671,52 @@ body.lf-offcanvas-open {
   opacity: 0.6;
   pointer-events: none;
 }
+
+.lf-variant-loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  pointer-events: auto;
+}
+
+.lf-variant-loader.is-active {
+  display: flex;
+}
+
+.lf-variant-loader__spinner {
+  width: 56px;
+  height: 56px;
+  border: 4px solid rgba(255, 255, 255, 0.35);
+  border-top-color: var(--lf-accent, #dd7210);
+  border-radius: 50%;
+  animation: lf-variant-spin 0.75s linear infinite;
+  background: rgba(17, 24, 39, 0.75);
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.lf-variant-loader__spinner .screen-reader-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+@keyframes lf-variant-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

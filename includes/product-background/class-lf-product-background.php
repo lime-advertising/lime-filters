@@ -282,7 +282,16 @@ class LF_Product_Background {
 
         $output  = '<div class="' . esc_attr(implode(' ', $wrapper_classes)) . '" data-product-id="' . esc_attr($product->get_id()) . '"' . $data_attrs . '>';
         $output .= '<div class="lf-bg-gallery__main swiper"><div class="swiper-wrapper">' . implode('', $main_slides) . '</div>';
-        $output .= '<div class="lf-bg-gallery__nav"><button type="button" class="lf-bg-gallery__prev" aria-label="' . esc_attr__('Previous image', 'lime-filters') . '">&lsaquo;</button><button type="button" class="lf-bg-gallery__next" aria-label="' . esc_attr__('Next image', 'lime-filters') . '">&rsaquo;</button></div></div>';
+        $output .= '<div class="lf-bg-gallery__nav">';
+        $output .= '<button type="button" class="lf-bg-gallery__prev" aria-label="' . esc_attr__('Previous image', 'lime-filters') . '">';
+        $output .= '<span class="lf-bg-gallery__icon" aria-hidden="true">' . self::navigation_icon('prev') . '</span>';
+        $output .= '<span class="screen-reader-text">' . esc_html__('Previous image', 'lime-filters') . '</span>';
+        $output .= '</button>';
+        $output .= '<button type="button" class="lf-bg-gallery__next" aria-label="' . esc_attr__('Next image', 'lime-filters') . '">';
+        $output .= '<span class="lf-bg-gallery__icon" aria-hidden="true">' . self::navigation_icon('next') . '</span>';
+        $output .= '<span class="screen-reader-text">' . esc_html__('Next image', 'lime-filters') . '</span>';
+        $output .= '</button>';
+        $output .= '</div></div>';
         $output .= '<div class="lf-bg-gallery__thumbs swiper"><div class="swiper-wrapper">' . implode('', $thumb_slides) . '</div></div>';
         $output .= '</div>';
 
@@ -299,6 +308,14 @@ class LF_Product_Background {
 
     public static function filter_single_main($html) {
         return self::wrap_image_html($html);
+    }
+
+    protected static function navigation_icon($direction = 'next') {
+        $direction = ($direction === 'prev') ? 'prev' : 'next';
+        if ($direction === 'prev') {
+            return '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"><path d="M14.5 5.5L8 12l6.5 6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        }
+        return '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"><path d="M9.5 5.5L16 12l-6.5 6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     }
 
     protected static function wrap_image_html($html) {

@@ -1,0 +1,150 @@
+.lf-variants-toggle {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.lf-variants-toggle input[type="checkbox"] {
+  margin: 0;
+}
+
+#lf-variants-root {
+  border: 1px solid #dcdcde;
+  border-radius: 6px;
+  margin-top: 16px;
+  padding: 16px;
+  background: #fff;
+}
+
+.lf-variants-app__empty {
+  color: #646970;
+  font-style: italic;
+}
+
+.lf-variants-section {
+  border-bottom: 1px solid #dcdcde;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+
+.lf-variants-section:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.lf-variants-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.lf-variants-section__title {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.lf-variants-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lf-variants-add select {
+  min-width: 180px;
+}
+
+.lf-variants-row {
+  border: 1px solid #dcdcde;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background: #fdfdfd;
+}
+
+.lf-variants-row__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.lf-variants-row__title {
+  font-weight: 600;
+  margin: 0;
+}
+
+.lf-variants-row__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.lf-variants-row__body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.lf-variants-media {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lf-variants-media__preview {
+  align-items: center;
+  background: #f3f4f5;
+  border: 1px dashed #c3c4c7;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  min-height: 120px;
+  overflow: hidden;
+  position: relative;
+}
+
+.lf-variants-media__preview img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.lf-variants-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lf-variants-field label {
+  font-weight: 600;
+}
+
+.lf-variants-affiliates {
+  border-top: 1px solid #e0e0e0;
+  margin-top: 12px;
+  padding-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.lf-variants-affiliates__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lf-variants-affiliates__item label {
+  font-weight: 500;
+}
+
+.lf-variants-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.lf-variants-row:last-child {
+  margin-bottom: 0;
+}

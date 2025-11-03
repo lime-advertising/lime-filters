@@ -205,6 +205,13 @@
   filter: invert(1) brightness(1.05);
 }
 
+.lf-affiliates__button.is-disabled,
+.lf-affiliates__table-link.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 .lf-affiliates__table-link[href*="bestbuy"]:hover img,
 .lf-affiliates__table-link[href*="amazon"]:hover img {
   filter: invert(1) sepia(1) saturate(3) hue-rotate(35deg) brightness(1.1);

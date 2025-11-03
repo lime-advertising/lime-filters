@@ -37,17 +37,42 @@
   gap: 8px;
 }
 
-.lf-pill {
+.lf-attribute-group__pills .lf-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 6px 14px;
+  margin: 0;
   border-radius: 999px;
   border: 1px solid rgba(213, 227, 252, 0.5);
   background: rgba(12, 19, 38, 0.08);
   color: var(--lf-text, #1f2933);
   font-size: 0.8rem;
   font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+button.lf-pill {
+  cursor: pointer;
+  appearance: none;
+  outline: none;
+}
+
+.lf-pill.has-variant {
+  border-color: rgba(12, 19, 38, 0.15);
+}
+
+.lf-attribute-group__pills .lf-pill:hover,
+.lf-attribute-group__pills .lf-pill.is-active,
+.lf-attribute-group__pills .lf-pill:focus-visible {
+  background: #ffffff !important;
+  border-color: #ffffff !important;
+  color: #dd7210 !important;
+}
+
+.lf-pill:not(.has-variant) {
+  opacity: 0.7;
 }
 
 .lf-product-attributes--empty {

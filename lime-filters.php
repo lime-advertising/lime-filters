@@ -29,6 +29,7 @@ add_action('plugins_loaded', function() {
     require_once LF_PLUGIN_DIR . 'includes/class-lf-frontend.php';
     require_once LF_PLUGIN_DIR . 'includes/class-lf-ajax.php';
     require_once LF_PLUGIN_DIR . 'includes/class-lf-elementor-widget.php';
+    require_once LF_PLUGIN_DIR . 'includes/class-lf-product-variants.php';
     require_once LF_PLUGIN_DIR . 'includes/compare/class-lf-product-compare.php';
     require_once LF_PLUGIN_DIR . 'includes/product-background/class-lf-product-background.php';
     require_once LF_PLUGIN_DIR . 'includes/related-products/class-lf-related-products.php';
@@ -39,6 +40,7 @@ add_action('plugins_loaded', function() {
     LF_Frontend::init();
     LF_AJAX::init();
     LF_Elementor_Widget::maybe_register();
+    LF_Product_Variants::init();
     LF_Product_Compare::init();
     LF_Product_Background::init();
     LF_Related_Products::init();

@@ -147,6 +147,8 @@ class LF_Elementor_Product_Affiliates_Widget extends \Elementor\Widget_Base
             return;
         }
 
+        LF_Product_Variants::record_frontend_product($product);
+
         $stores = LF_Helpers::affiliate_stores();
         if (empty($stores) || !is_array($stores)) {
             return;
@@ -187,7 +189,7 @@ class LF_Elementor_Product_Affiliates_Widget extends \Elementor\Widget_Base
 
         $style = sprintf('--lf-affiliates-desktop:%1$d;--lf-affiliates-tablet:%2$d;--lf-affiliates-mobile:%3$d;', $desktop, $tablet, $mobile);
 
-        echo '<div class="' . esc_attr(implode(' ', $wrapper_classes)) . '" style="' . esc_attr($style) . '">';
+        echo '<div class="' . esc_attr(implode(' ', $wrapper_classes)) . '" style="' . esc_attr($style) . '" data-product-id="' . esc_attr($product_id) . '">';
 
         if ($settings['show_title'] === 'yes' && !empty($settings['title_text'])) {
             echo '<h3 class="lf-affiliates__title">' . esc_html($settings['title_text']) . '</h3>';
