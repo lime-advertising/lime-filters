@@ -1,6 +1,7 @@
 (function () {
   const data = window.LimeFiltersVariants || {};
   const products = data.products || {};
+  const selections = {};
   let loaderEl = null;
 
   if (!Object.keys(products).length) {
@@ -11,18 +12,62 @@
     return products[String(productId)] || null;
   }
 
-  function getVariant(productId, attributeSlug, termSlug) {
+  function getSelection(productId) {
+    if (!selections[productId]) {
+      selections[productId] = {};
+    }
+    return selections[productId];
+  }
+
+  function variantKey(combo) {
+    const parts = [];
+    Object.keys(combo)
+      .sort()
+      .forEach((slug) => {
+        parts.push(`${slug}=${combo[slug]}`);
+      });
+    return parts.join('|');
+  }
+
+  function getRequiredAttributes(product) {
+    const required = Array.isArray(product.required) ? product.required : [];
+    return required.filter((slug) => slug);
+  }
+
+  function findVariant(productId, attributeSlug, termSlug) {
     const product = getProduct(productId);
-    if (!product || !product.attributes) {
+    if (!product || !product.variants) {
       return null;
     }
 
-    const attribute = product.attributes[attributeSlug];
-    if (!attribute || !attribute.terms) {
+    const required = getRequiredAttributes(product);
+    const selection = getSelection(productId);
+
+    if (!required.length) {
+      // Legacy mode: respond to single attribute choices.
+      const variants = product.variants;
+      const keys = Object.keys(variants);
+      for (let i = 0; i < keys.length; i++) {
+        const entry = variants[keys[i]];
+        if (entry && entry.attributes && entry.attributes[attributeSlug] === termSlug) {
+          return entry;
+        }
+      }
       return null;
     }
 
-    return attribute.terms[termSlug] || null;
+    const combo = {};
+    for (let i = 0; i < required.length; i++) {
+      const slug = required[i];
+      const value = slug === attributeSlug ? termSlug : selection[slug];
+      if (!value) {
+        return null;
+      }
+      combo[slug] = value;
+    }
+
+    const key = variantKey(combo);
+    return product.variants[key] || null;
   }
 
   function mergeAffiliates(product, variant) {
@@ -77,7 +122,6 @@
   }
 
   function setImageAttributes(img, image) {
-    console.log('[LF Variants] Updating image', image);
     if (!img || !image || !image.src) {
       return;
     }
@@ -252,9 +296,7 @@
 
   function updateProductImage(productId, variant, product) {
     const image = (variant && variant.image) ? variant.image : (product.default ? product.default.image : null);
-    console.log('[LF Variants] Applying variant image', { productId, variant, image });
     if (!image || !image.src) {
-      console.log('[LF Variants] No image available for variant');
       return;
     }
 
@@ -303,13 +345,6 @@
       });
     });
 
-    console.log('[LF Variants] Candidate image targets', targets.length, targets);
-
-    if (!targets.length) {
-      const gallery = document.querySelector(`.lf-bg-gallery[data-product-id="${productId}"]`);
-      console.warn('[LF Variants] No image elements found for product', productId, { gallery });
-    }
-
     if (targets.length) {
       setImageAttributes(targets[0], image);
     }
@@ -355,14 +390,14 @@
     }, 120);
   }
 
-  function applyVariant(productId, attributeSlug, termSlug) {
+  function applyVariantSelection(productId, attributeSlug, termSlug) {
     const product = getProduct(productId);
     if (!product) {
       return;
     }
     showLoader();
     try {
-      const variant = getVariant(productId, attributeSlug, termSlug);
+      const variant = termSlug ? findVariant(productId, attributeSlug, termSlug) : null;
       updateProductImage(productId, variant, product);
       updateAffiliateLinks(productId, variant, product);
       updateSkuDisplay(productId, variant, product);
@@ -371,14 +406,16 @@
     }
   }
 
-  function setActivePill(button) {
-    const group = button.closest('.lf-attribute-group__pills');
-    if (group) {
-      group.querySelectorAll('.lf-pill.is-active').forEach((pill) => {
-        pill.classList.remove('is-active');
-      });
+  function setActivePill(group, button) {
+    if (!group) {
+      return;
     }
-    button.classList.add('is-active');
+    group.querySelectorAll('.lf-pill.is-active').forEach((pill) => {
+      pill.classList.remove('is-active');
+    });
+    if (button) {
+      button.classList.add('is-active');
+    }
   }
 
   document.addEventListener('click', (event) => {
@@ -395,7 +432,19 @@
       return;
     }
 
-    setActivePill(button);
-    applyVariant(productId, attributeSlug, termSlug);
+    const group = button.closest('.lf-attribute-group__pills');
+    const selection = getSelection(productId);
+    const isActive = button.classList.contains('is-active');
+
+    if (isActive) {
+      delete selection[attributeSlug];
+      setActivePill(group, null);
+      applyVariantSelection(productId, attributeSlug, null);
+      return;
+    }
+
+    selection[attributeSlug] = termSlug;
+    setActivePill(group, button);
+    applyVariantSelection(productId, attributeSlug, termSlug);
   });
 })();

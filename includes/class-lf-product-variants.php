@@ -7,6 +7,7 @@ class LF_Product_Variants {
     const META_ENABLED = '_lf_variants_enabled';
     const META_PAYLOAD = '_lf_variant_payload';
     const META_APPEND_GALLERY = '_lf_variant_gallery_append';
+    const PAYLOAD_VERSION = 2;
 
     protected static $frontend_products = [];
     protected static $frontend_script_enqueued = false;
@@ -159,11 +160,12 @@ class LF_Product_Variants {
         }
 
         $sanitized = self::sanitize_payload($decoded, $product);
-        if (empty($sanitized)) {
+        if (empty($sanitized) || empty($sanitized['variants'])) {
             delete_post_meta($post_id, self::META_PAYLOAD);
             return;
         }
 
+        $sanitized['version'] = self::PAYLOAD_VERSION;
         update_post_meta($post_id, self::META_PAYLOAD, $sanitized);
     }
 
@@ -176,77 +178,202 @@ class LF_Product_Variants {
         $stores = LF_Helpers::affiliate_stores();
         $store_keys = array_keys($stores);
 
-        $sanitized = [];
+        if (self::is_legacy_payload($payload)) {
+            $payload = self::convert_legacy_payload($payload);
+        }
 
-        foreach ($payload as $attribute_slug => $terms) {
-            if (!isset($attributes[$attribute_slug]) || !is_array($terms)) {
-                continue;
-            }
-
-            foreach ($terms as $term_slug => $data) {
-                if (!isset($attributes[$attribute_slug]['terms'][$term_slug]) || !is_array($data)) {
-                    continue;
-                }
-
-                $entry = [];
-
-                $image_id = isset($data['image_id']) ? absint($data['image_id']) : 0;
-                if ($image_id > 0) {
-                    $entry['image_id'] = $image_id;
-                }
-
-                $sku = isset($data['sku']) ? wc_clean($data['sku']) : '';
-                if ($sku !== '') {
-                    $entry['sku'] = $sku;
-                }
-
-                if (isset($data['affiliates']) && is_array($data['affiliates'])) {
-                    $affiliates = [];
-                    foreach ($data['affiliates'] as $store => $url) {
-                        if (!in_array($store, $store_keys, true)) {
-                            continue;
-                        }
-                        $url = is_string($url) ? trim($url) : '';
-                        if ($url === '') {
-                            continue;
-                        }
-                        $affiliates[$store] = esc_url_raw($url);
-                    }
-                    if (!empty($affiliates)) {
-                        $entry['affiliates'] = $affiliates;
-                    }
-                }
-
-                if (isset($data['extras']) && is_array($data['extras'])) {
-                    $entry['extras'] = array_map('wc_clean', $data['extras']);
-                }
-
-            if (!empty($entry)) {
-                    if (!isset($sanitized[$attribute_slug])) {
-                        $sanitized[$attribute_slug] = [];
-                    }
-                    $sanitized[$attribute_slug][$term_slug] = $entry;
+        $selected_attributes = [];
+        if (isset($payload['attributes']) && is_array($payload['attributes'])) {
+            foreach ($payload['attributes'] as $attribute_slug) {
+                $attribute_slug = sanitize_title($attribute_slug);
+                if (isset($attributes[$attribute_slug])) {
+                    $selected_attributes[] = $attribute_slug;
                 }
             }
         }
+        $selected_attributes = array_values(array_unique($selected_attributes));
+
+        $variant_entries = isset($payload['variants']) && is_array($payload['variants']) ? $payload['variants'] : [];
+        $sanitized_variants = [];
+
+        foreach ($variant_entries as $key => $variant_entry) {
+            $combo = [];
+            if (isset($variant_entry['attributes']) && is_array($variant_entry['attributes']) && !empty($variant_entry['attributes'])) {
+                $combo = $variant_entry['attributes'];
+            } elseif (is_string($key)) {
+                $combo = self::parse_variant_key($key);
+            }
+
+            if (empty($combo)) {
+                continue;
+            }
+
+            $normalized_combo = [];
+            foreach ($combo as $attr_slug => $term_slug) {
+                $attr_slug = sanitize_title($attr_slug);
+                $term_slug = sanitize_title($term_slug);
+                if (!isset($attributes[$attr_slug]) || !isset($attributes[$attr_slug]['terms'][$term_slug])) {
+                    continue 2;
+                }
+                $normalized_combo[$attr_slug] = $term_slug;
+            }
+
+            if (empty($normalized_combo)) {
+                continue;
+            }
+
+            if (!empty($selected_attributes)) {
+                $missing = array_diff($selected_attributes, array_keys($normalized_combo));
+                if (!empty($missing)) {
+                    continue;
+                }
+            }
+
+            $sanitized_entry = self::sanitize_variant_entry($variant_entry, $normalized_combo, $store_keys);
+            if ($sanitized_entry) {
+                $key = self::variant_key($normalized_combo);
+                $sanitized_variants[$key] = $sanitized_entry;
+            }
+        }
+
+        if (empty($sanitized_variants)) {
+            return [];
+        }
+
+        if (empty($selected_attributes)) {
+            $selected_attributes = [];
+        }
+
+        return [
+            'version'   => self::PAYLOAD_VERSION,
+            'attributes' => $selected_attributes,
+            'variants'   => $sanitized_variants,
+        ];
+    }
+
+    protected static function sanitize_variant_entry(array $entry, array $combo, array $store_keys) {
+        $sanitized = [
+            'attributes' => $combo,
+        ];
+
+        $image_id = isset($entry['image_id']) ? absint($entry['image_id']) : 0;
+        if ($image_id > 0) {
+            $sanitized['image_id'] = $image_id;
+        }
+
+        $sku = isset($entry['sku']) ? wc_clean($entry['sku']) : '';
+        if ($sku !== '') {
+            $sanitized['sku'] = $sku;
+        }
+
+        if (isset($entry['affiliates']) && is_array($entry['affiliates'])) {
+            $affiliates = [];
+            foreach ($entry['affiliates'] as $store => $url) {
+                if (!in_array($store, $store_keys, true)) {
+                    continue;
+                }
+                $url = is_string($url) ? trim($url) : '';
+                if ($url === '') {
+                    continue;
+                }
+                $affiliates[$store] = esc_url_raw($url);
+            }
+            if (!empty($affiliates)) {
+                $sanitized['affiliates'] = $affiliates;
+            }
+        }
+
+        if (isset($entry['extras']) && is_array($entry['extras']) && !empty($entry['extras'])) {
+            $sanitized['extras'] = array_map('wc_clean', $entry['extras']);
+        }
 
         return $sanitized;
+    }
+
+    protected static function variant_key(array $combo) {
+        ksort($combo);
+        $parts = [];
+        foreach ($combo as $attribute_slug => $term_slug) {
+            $parts[] = $attribute_slug . '=' . $term_slug;
+        }
+        return implode('|', $parts);
+    }
+
+    protected static function parse_variant_key($key) {
+        $combo = [];
+        $segments = array_filter(array_map('trim', explode('|', (string) $key)));
+        foreach ($segments as $segment) {
+            $parts = array_map('trim', explode('=', $segment, 2));
+            if (count($parts) !== 2) {
+                continue;
+            }
+            $combo[sanitize_title($parts[0])] = sanitize_title($parts[1]);
+        }
+        return $combo;
+    }
+
+    protected static function is_legacy_payload(array $payload) {
+        if (isset($payload['variants']) && is_array($payload['variants'])) {
+            return false;
+        }
+
+        foreach ($payload as $value) {
+            if (is_array($value)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected static function convert_legacy_payload(array $payload) {
+        $converted = [
+            'version'   => self::PAYLOAD_VERSION,
+            'attributes' => [],
+            'variants'   => [],
+        ];
+
+        foreach ($payload as $attribute_slug => $terms) {
+            if (!is_array($terms)) {
+                continue;
+            }
+            foreach ($terms as $term_slug => $entry) {
+                if (!is_array($entry)) {
+                    continue;
+                }
+                $combo = [
+                    sanitize_title($attribute_slug) => sanitize_title($term_slug),
+                ];
+                $key = self::variant_key($combo);
+                $converted['variants'][$key] = [
+                    'attributes' => $combo,
+                    'image_id'   => isset($entry['image_id']) ? $entry['image_id'] : 0,
+                    'sku'        => isset($entry['sku']) ? $entry['sku'] : '',
+                    'affiliates' => isset($entry['affiliates']) ? $entry['affiliates'] : [],
+                    'extras'     => isset($entry['extras']) ? $entry['extras'] : [],
+                ];
+            }
+        }
+
+        return $converted;
     }
 
     protected static function prepare_admin_payload(WC_Product $product, array $payload, $enabled, $append_gallery) {
         $attributes = self::get_attribute_map($product);
         $stores     = LF_Helpers::affiliate_stores();
 
-        $variants = [];
-        foreach ($payload as $attribute_slug => $terms) {
-            if (!isset($attributes[$attribute_slug]) || !is_array($terms)) {
-                continue;
-            }
-            foreach ($terms as $term_slug => $data) {
+        $payload = self::sanitize_payload($payload, $product);
+        $selected_attributes = isset($payload['attributes']) ? (array) $payload['attributes'] : [];
+        $variant_rows = [];
+
+        if (isset($payload['variants']) && is_array($payload['variants'])) {
+            foreach ($payload['variants'] as $key => $data) {
                 $entry = [
-                    'image_id' => isset($data['image_id']) ? absint($data['image_id']) : 0,
-                    'image_url' => '',
-                    'sku'       => isset($data['sku']) ? $data['sku'] : '',
+                    'key'        => $key,
+                    'attributes' => isset($data['attributes']) ? (array) $data['attributes'] : [],
+                    'image_id'   => isset($data['image_id']) ? absint($data['image_id']) : 0,
+                    'image_url'  => '',
+                    'sku'        => isset($data['sku']) ? $data['sku'] : '',
                     'affiliates' => [],
                     'extras'     => isset($data['extras']) && is_array($data['extras']) ? $data['extras'] : [],
                 ];
@@ -267,10 +394,7 @@ class LF_Product_Variants {
                     }
                 }
 
-                if (!isset($variants[$attribute_slug])) {
-                    $variants[$attribute_slug] = [];
-                }
-                $variants[$attribute_slug][$term_slug] = $entry;
+                $variant_rows[$key] = $entry;
             }
         }
 
@@ -283,15 +407,17 @@ class LF_Product_Variants {
         }
 
         return [
-            'productId'  => $product->get_id(),
-            'enabled'    => $enabled ? 'yes' : 'no',
-            'append_gallery' => $append_gallery ? 'yes' : 'no',
-            'attributes' => array_values($attributes),
-            'variants'   => $variants,
-            'stores'     => $store_payload,
-            'i18n'       => [
+            'productId'          => $product->get_id(),
+            'enabled'            => $enabled ? 'yes' : 'no',
+            'append_gallery'     => $append_gallery ? 'yes' : 'no',
+            'attributes'         => array_values($attributes),
+            'selected_attributes'=> $selected_attributes,
+            'variants'           => $variant_rows,
+            'stores'             => $store_payload,
+            'version'            => isset($payload['version']) ? absint($payload['version']) : self::PAYLOAD_VERSION,
+            'i18n'               => [
                 'noAttributes'   => __('Assign attributes to this product to configure variants.', 'lime-filters'),
-                'addVariant'     => __('Add Variant', 'lime-filters'),
+                'addVariant'     => __('Add Combination', 'lime-filters'),
                 'termPlaceholder'=> __('Select a value', 'lime-filters'),
                 'imageSelect'    => __('Select image', 'lime-filters'),
                 'imageChange'    => __('Change image', 'lime-filters'),
@@ -300,6 +426,18 @@ class LF_Product_Variants {
                 'affiliateLabel' => __('Affiliate URL', 'lime-filters'),
                 'removeRow'      => __('Remove variant', 'lime-filters'),
                 'enabledLabel'   => __('Variants enabled', 'lime-filters'),
+                'attributeToggleLabel' => __('Attributes used for variants', 'lime-filters'),
+                'generateAll'    => __('Generate combinations', 'lime-filters'),
+                'noAttributeSelection' => __('Select at least one attribute to build combinations.', 'lime-filters'),
+                'combinationLabel'=> __('Combination', 'lime-filters'),
+                'addCombination' => __('Add Combination', 'lime-filters'),
+                'existingCombo'  => __('This combination already exists.', 'lime-filters'),
+                'generatedCount' => __('Added %d new combinations.', 'lime-filters'),
+                'nothingGenerated' => __('All possible combinations already exist.', 'lime-filters'),
+                'attributeBadgeSeparator' => __(' / ', 'lime-filters'),
+                'attributeNoTerms' => __('At least one selected attribute has no values assigned.', 'lime-filters'),
+                'expandRow'    => __('Show details', 'lime-filters'),
+                'collapseRow'  => __('Hide details', 'lime-filters'),
             ],
         ];
     }
@@ -347,7 +485,7 @@ class LF_Product_Variants {
         return $attributes;
     }
 
-    public static function get_variants_for_product($product_id) {
+    public static function get_variants_for_product($product_id, $product = null) {
         $enabled = get_post_meta($product_id, self::META_ENABLED, true);
         if ($enabled !== 'yes') {
             return [];
@@ -358,7 +496,15 @@ class LF_Product_Variants {
             return [];
         }
 
-        return $payload;
+        if (!$product instanceof WC_Product) {
+            $product = wc_get_product($product_id);
+        }
+
+        if (!$product instanceof WC_Product) {
+            return [];
+        }
+
+        return self::sanitize_payload($payload, $product);
     }
 
     public static function record_frontend_product(WC_Product $product) {
@@ -367,8 +513,8 @@ class LF_Product_Variants {
             return;
         }
 
-        $variants = self::get_variants_for_product($product_id);
-        if (empty($variants)) {
+        $variants = self::get_variants_for_product($product_id, $product);
+        if (empty($variants) || empty($variants['variants'])) {
             return;
         }
 
@@ -382,9 +528,13 @@ class LF_Product_Variants {
         self::ensure_frontend_script();
     }
 
-    protected static function build_frontend_payload(WC_Product $product, array $variants, $append_gallery) {
+    protected static function build_frontend_payload(WC_Product $product, array $payload, $append_gallery) {
         $attributes = self::get_attribute_map($product);
         if (empty($attributes)) {
+            return [];
+        }
+
+        if (empty($payload['variants']) || !is_array($payload['variants'])) {
             return [];
         }
 
@@ -399,47 +549,63 @@ class LF_Product_Variants {
                 'affiliates' => self::get_product_affiliates($product->get_id(), $store_keys),
             ],
             'attributes' => [],
+            'required'   => isset($payload['attributes']) ? array_values($payload['attributes']) : [],
+            'variants'   => [],
             'append_gallery' => $append_gallery ? 'yes' : 'no',
         ];
 
-        foreach ($variants as $attribute_slug => $terms) {
-            if (!isset($attributes[$attribute_slug])) {
+        foreach ($payload['variants'] as $key => $entry) {
+            $combo = isset($entry['attributes']) && is_array($entry['attributes']) ? $entry['attributes'] : [];
+            if (empty($combo)) {
                 continue;
             }
-            $attr_terms = [];
-            foreach ($terms as $term_slug => $entry) {
-                if (!isset($attributes[$attribute_slug]['terms'][$term_slug])) {
-                    continue;
-                }
-                $variant_entry = [
-                    'sku'        => isset($entry['sku']) ? $entry['sku'] : '',
-                    'image'      => isset($entry['image_id']) ? self::get_image_data($entry['image_id']) : null,
-                    'affiliates' => [],
-                    'extras'     => isset($entry['extras']) && is_array($entry['extras']) ? $entry['extras'] : [],
-                ];
 
-                if (isset($entry['affiliates']) && is_array($entry['affiliates'])) {
-                    foreach ($entry['affiliates'] as $store => $url) {
-                        if (!in_array($store, $store_keys, true)) {
-                            continue;
-                        }
-                        $variant_entry['affiliates'][$store] = esc_url($url);
+            $normalized_combo = [];
+            foreach ($combo as $attribute_slug => $term_slug) {
+                $attribute_slug = sanitize_title($attribute_slug);
+                $term_slug = sanitize_title($term_slug);
+                if (!isset($attributes[$attribute_slug]) || !isset($attributes[$attribute_slug]['terms'][$term_slug])) {
+                    continue 2;
+                }
+
+                if (!isset($data['attributes'][$attribute_slug])) {
+                    $data['attributes'][$attribute_slug] = [
+                        'slug'  => $attribute_slug,
+                        'label' => $attributes[$attribute_slug]['label'],
+                        'terms' => [],
+                    ];
+                }
+
+                $data['attributes'][$attribute_slug]['terms'][$term_slug] = $attributes[$attribute_slug]['terms'][$term_slug];
+                $normalized_combo[$attribute_slug] = $term_slug;
+            }
+
+            if (empty($normalized_combo)) {
+                continue;
+            }
+
+            $variant_entry = [
+                'attributes' => $normalized_combo,
+                'sku'        => isset($entry['sku']) ? $entry['sku'] : '',
+                'image'      => isset($entry['image_id']) ? self::get_image_data($entry['image_id']) : null,
+                'affiliates' => [],
+                'extras'     => isset($entry['extras']) && is_array($entry['extras']) ? $entry['extras'] : [],
+            ];
+
+            if (isset($entry['affiliates']) && is_array($entry['affiliates'])) {
+                foreach ($entry['affiliates'] as $store => $url) {
+                    if (!in_array($store, $store_keys, true)) {
+                        continue;
                     }
+                    $variant_entry['affiliates'][$store] = esc_url($url);
                 }
-
-                $attr_terms[$term_slug] = $variant_entry;
             }
 
-            if (!empty($attr_terms)) {
-                $data['attributes'][$attribute_slug] = [
-                    'slug'  => $attribute_slug,
-                    'label' => $attributes[$attribute_slug]['label'],
-                    'terms' => $attr_terms,
-                ];
-            }
+            $variant_key = is_string($key) ? $key : self::variant_key($normalized_combo);
+            $data['variants'][$variant_key] = $variant_entry;
         }
 
-        if (empty($data['attributes'])) {
+        if (empty($data['variants'])) {
             return [];
         }
 
@@ -553,7 +719,8 @@ class LF_Product_Variants {
         }
 
         $product_id = $product->get_id();
-        if (!self::get_variants_for_product($product_id)) {
+        $variant_data = self::get_variants_for_product($product_id, $product);
+        if (empty($variant_data) || empty($variant_data['variants'])) {
             return $html;
         }
 

@@ -16,6 +16,7 @@
 - AJAX responses now include column metadata; front-end grid uses CSS custom props.
 - Added Product Background module (separate admin page + front-end wrapper CSS).
 - Admin mapping allows dedicated “Shop (All Products)” configuration and optional category filter.
+- Attribute Variants panel now lets admins pick participating attributes and build multi-attribute combinations (e.g., Color × Fuel Type) instead of configuring values one attribute at a time.
 
 ## Next Ideas / Follow-ups
 - Hook up additional behavior for the mobile “Sort & Filter” button (if needed).

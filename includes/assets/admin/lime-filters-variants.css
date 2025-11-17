@@ -33,6 +33,59 @@
   padding-bottom: 0;
 }
 
+#lf-variants-root .lf-variants-section--attributes {
+  background: #f9f9f9;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+#lf-variants-root .lf-variants-attribute-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+#lf-variants-root .lf-variants-attribute {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #dcdcde;
+  border-radius: 4px;
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  padding: 6px 10px;
+}
+
+#lf-variants-root .lf-variants-section--builder {
+  background: #fff;
+  border: 1px solid #e3e3e3;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+#lf-variants-root .lf-variants-combo-form {
+  display: grid;
+  gap: 12px;
+}
+
+#lf-variants-root .lf-variants-combo-field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+#lf-variants-root .lf-variants-combo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#lf-variants-root .lf-variants-warning {
+  color: #d63638;
+  margin: 0;
+}
+
 .lf-variants-section__header {
   display: flex;
   align-items: center;
@@ -86,6 +139,11 @@
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
   align-items: start;
+  margin-top: 12px;
+}
+
+.lf-variants-row__body[hidden] {
+  display: none;
 }
 
 .lf-variants-media {
@@ -147,4 +205,26 @@
 
 .lf-variants-row:last-child {
   margin-bottom: 0;
+}
+
+#lf-variants-root .lf-variants-row__toggle {
+  background: none;
+  border: 0;
+  color: #2271b1;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+}
+
+#lf-variants-root .lf-variants-row__toggle:hover {
+  color: #135e96;
+}
+
+#lf-variants-root .lf-variants-row__toggle:focus-visible {
+  outline: 2px solid #2271b1;
+  outline-offset: 2px;
+}
+
+#lf-variants-root .lf-variants-row__body[hidden] {
+  display: none;
 }

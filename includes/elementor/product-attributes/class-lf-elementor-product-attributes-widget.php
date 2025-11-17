@@ -203,7 +203,24 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
         LF_Product_Variants::record_frontend_product($product);
 
         $product_id  = $product->get_id();
-        $variant_map = LF_Product_Variants::get_variants_for_product($product_id);
+        $variant_map = LF_Product_Variants::get_variants_for_product($product_id, $product);
+        if (!is_array($variant_map)) {
+            $variant_map = [];
+        }
+        $term_variants = [];
+        if (!empty($variant_map['variants']) && is_array($variant_map['variants'])) {
+            foreach ($variant_map['variants'] as $variant) {
+                if (empty($variant['attributes']) || !is_array($variant['attributes'])) {
+                    continue;
+                }
+                foreach ($variant['attributes'] as $attr_slug => $term_slug) {
+                    if (!isset($term_variants[$attr_slug])) {
+                        $term_variants[$attr_slug] = [];
+                    }
+                    $term_variants[$attr_slug][$term_slug] = true;
+                }
+            }
+        }
 
         ob_start();
         echo '<div class="' . esc_attr(implode(' ', $wrapper_classes)) . '" data-product-id="' . esc_attr($product_id) . '">';
@@ -219,7 +236,7 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
                 echo '<div class="lf-attribute-group__pills" data-attribute="' . esc_attr($attr_slug) . '">';
                 foreach ($terms as $term) {
                     $term_slug   = $term->slug;
-                    $has_variant = isset($variant_map[$attr_slug][$term_slug]);
+                    $has_variant = isset($term_variants[$attr_slug][$term_slug]);
                     $classes     = ['lf-pill'];
                     if ($has_variant) {
                         $classes[] = 'has-variant';
@@ -238,7 +255,7 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
                 echo '<div class="lf-attribute-group__pills" data-attribute="' . esc_attr($attr_slug) . '">';
                 foreach ($options as $option) {
                     $term_slug   = sanitize_title($option);
-                    $has_variant = isset($variant_map[$attr_slug][$term_slug]);
+                    $has_variant = isset($term_variants[$attr_slug][$term_slug]);
                     $classes     = ['lf-pill'];
                     if ($has_variant) {
                         $classes[] = 'has-variant';
