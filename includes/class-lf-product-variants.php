@@ -65,7 +65,7 @@ class LF_Product_Variants {
         echo '<p class="form-field lf-variants-toggle">';
         echo '<label for="lf-variants-enabled">' . esc_html__('Enable attribute-based variants', 'lime-filters') . '</label>';
         echo '<input type="checkbox" id="lf-variants-enabled" name="_lf_variants_enabled" value="yes"' . checked($enabled, 'yes', false) . ' />';
-        echo '<span class="description">' . esc_html__('When enabled, configure per-attribute overrides for images, SKU, and affiliate links.', 'lime-filters') . '</span>';
+        echo '<span class="description">' . esc_html__('When enabled, configure per-attribute overrides for images, SKU, UPC, and affiliate links.', 'lime-filters') . '</span>';
         echo '</p>';
         echo '<input type="hidden" name="_lf_variants_append_gallery" value="no" />';
         echo '<p class="form-field lf-variants-toggle">';
@@ -266,6 +266,11 @@ class LF_Product_Variants {
             $sanitized['sku'] = $sku;
         }
 
+        $upc = isset($entry['upc']) ? wc_clean($entry['upc']) : '';
+        if ($upc !== '') {
+            $sanitized['upc'] = $upc;
+        }
+
         if (isset($entry['affiliates']) && is_array($entry['affiliates'])) {
             $affiliates = [];
             foreach ($entry['affiliates'] as $store => $url) {
@@ -349,6 +354,7 @@ class LF_Product_Variants {
                     'attributes' => $combo,
                     'image_id'   => isset($entry['image_id']) ? $entry['image_id'] : 0,
                     'sku'        => isset($entry['sku']) ? $entry['sku'] : '',
+                    'upc'        => isset($entry['upc']) ? $entry['upc'] : '',
                     'affiliates' => isset($entry['affiliates']) ? $entry['affiliates'] : [],
                     'extras'     => isset($entry['extras']) ? $entry['extras'] : [],
                 ];
@@ -367,16 +373,17 @@ class LF_Product_Variants {
         $variant_rows = [];
 
         if (isset($payload['variants']) && is_array($payload['variants'])) {
-            foreach ($payload['variants'] as $key => $data) {
-                $entry = [
-                    'key'        => $key,
-                    'attributes' => isset($data['attributes']) ? (array) $data['attributes'] : [],
-                    'image_id'   => isset($data['image_id']) ? absint($data['image_id']) : 0,
-                    'image_url'  => '',
-                    'sku'        => isset($data['sku']) ? $data['sku'] : '',
-                    'affiliates' => [],
-                    'extras'     => isset($data['extras']) && is_array($data['extras']) ? $data['extras'] : [],
-                ];
+        foreach ($payload['variants'] as $key => $data) {
+            $entry = [
+                'key'        => $key,
+                'attributes' => isset($data['attributes']) ? (array) $data['attributes'] : [],
+                'image_id'   => isset($data['image_id']) ? absint($data['image_id']) : 0,
+                'image_url'  => '',
+                'sku'        => isset($data['sku']) ? $data['sku'] : '',
+                'upc'        => isset($data['upc']) ? $data['upc'] : '',
+                'affiliates' => [],
+                'extras'     => isset($data['extras']) && is_array($data['extras']) ? $data['extras'] : [],
+            ];
 
                 if ($entry['image_id']) {
                     $image_url = wp_get_attachment_image_url($entry['image_id'], 'thumbnail');
@@ -423,6 +430,7 @@ class LF_Product_Variants {
                 'imageChange'    => __('Change image', 'lime-filters'),
                 'imageRemove'    => __('Remove image', 'lime-filters'),
                 'skuLabel'       => __('SKU Override', 'lime-filters'),
+                'upcLabel'       => __('UPC', 'lime-filters'),
                 'affiliateLabel' => __('Affiliate URL', 'lime-filters'),
                 'removeRow'      => __('Remove variant', 'lime-filters'),
                 'enabledLabel'   => __('Variants enabled', 'lime-filters'),
@@ -587,6 +595,7 @@ class LF_Product_Variants {
             $variant_entry = [
                 'attributes' => $normalized_combo,
                 'sku'        => isset($entry['sku']) ? $entry['sku'] : '',
+                'upc'        => isset($entry['upc']) ? $entry['upc'] : '',
                 'image'      => isset($entry['image_id']) ? self::get_image_data($entry['image_id']) : null,
                 'affiliates' => [],
                 'extras'     => isset($entry['extras']) && is_array($entry['extras']) ? $entry['extras'] : [],

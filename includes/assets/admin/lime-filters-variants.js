@@ -187,6 +187,7 @@
         image_id: entry.image_id ? parseInt(entry.image_id, 10) : 0,
         image_url: entry.image_url || '',
         sku: entry.sku || '',
+        upc: entry.upc || '',
         affiliates: clone(entry.affiliates || {}),
         extras: clone(entry.extras || {}),
       };
@@ -202,6 +203,7 @@
       image_id: 0,
       image_url: '',
       sku: '',
+      upc: '',
       affiliates: {},
       extras: {},
     };
@@ -267,6 +269,9 @@
       }
       if (entry.sku) {
         variantPayload.sku = entry.sku.trim();
+      }
+      if (entry.upc) {
+        variantPayload.upc = entry.upc.trim();
       }
       if (entry.affiliates) {
         const affiliates = {};
@@ -454,6 +459,21 @@
     skuField.appendChild(skuLabel);
     skuField.appendChild(skuInput);
     body.appendChild(skuField);
+
+    const upcField = createEl('div', 'lf-variants-field');
+    const upcLabel = createEl('label', null, i18n.upcLabel || 'UPC');
+    upcLabel.setAttribute('for', `lf-variant-upc-${entry.key}`);
+    const upcInput = createEl('input');
+    upcInput.type = 'text';
+    upcInput.id = `lf-variant-upc-${entry.key}`;
+    upcInput.value = entry.upc || '';
+    upcInput.addEventListener('input', () => {
+      entry.upc = upcInput.value;
+      syncHiddenField();
+    });
+    upcField.appendChild(upcLabel);
+    upcField.appendChild(upcInput);
+    body.appendChild(upcField);
 
     renderAffiliateFields(body, entry);
     row.appendChild(body);

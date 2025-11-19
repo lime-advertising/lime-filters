@@ -34,6 +34,7 @@ add_action('plugins_loaded', function() {
     require_once LF_PLUGIN_DIR . 'includes/product-background/class-lf-product-background.php';
     require_once LF_PLUGIN_DIR . 'includes/related-products/class-lf-related-products.php';
     require_once LF_PLUGIN_DIR . 'includes/class-lf-wishlist.php';
+    require_once LF_PLUGIN_DIR . 'includes/class-lf-affiliate-archive.php';
 
     // Init
     LF_Admin::init();
@@ -45,6 +46,7 @@ add_action('plugins_loaded', function() {
     LF_Product_Background::init();
     LF_Related_Products::init();
     LF_Wishlist::init();
+    LF_Affiliate_Archive::init();
 
     add_filter('woocommerce_placeholder_img_src', function($src){
         return LF_Helpers::placeholder_image_url();

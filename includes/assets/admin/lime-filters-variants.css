@@ -1,14 +1,14 @@
-.lf-variants-toggle {
+#lf_variants_panel .lf-variants-toggle {
   align-items: center;
   display: flex;
   gap: 12px;
 }
 
-.lf-variants-toggle input[type="checkbox"] {
+#lf_variants_panel .lf-variants-toggle input[type="checkbox"] {
   margin: 0;
 }
 
-#lf-variants-root {
+#lf_variants_panel #lf-variants-root {
   border: 1px solid #dcdcde;
   border-radius: 6px;
   margin-top: 16px;
@@ -16,37 +16,37 @@
   background: #fff;
 }
 
-.lf-variants-app__empty {
+#lf_variants_panel .lf-variants-app__empty {
   color: #646970;
   font-style: italic;
 }
 
-.lf-variants-section {
+#lf_variants_panel .lf-variants-section {
   border-bottom: 1px solid #dcdcde;
   padding-bottom: 16px;
   margin-bottom: 16px;
 }
 
-.lf-variants-section:last-child {
+#lf_variants_panel .lf-variants-section:last-child {
   border-bottom: 0;
   margin-bottom: 0;
   padding-bottom: 0;
 }
 
-#lf-variants-root .lf-variants-section--attributes {
+#lf_variants_panel #lf-variants-root .lf-variants-section--attributes {
   background: #f9f9f9;
   border-radius: 4px;
   padding: 12px;
 }
 
-#lf-variants-root .lf-variants-attribute-list {
+#lf_variants_panel #lf-variants-root .lf-variants-attribute-list {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 12px;
 }
 
-#lf-variants-root .lf-variants-attribute {
+#lf_variants_panel #lf-variants-root .lf-variants-attribute {
   align-items: center;
   background: #fff;
   border: 1px solid #dcdcde;
@@ -57,59 +57,59 @@
   padding: 6px 10px;
 }
 
-#lf-variants-root .lf-variants-section--builder {
+#lf_variants_panel #lf-variants-root .lf-variants-section--builder {
   background: #fff;
   border: 1px solid #e3e3e3;
   border-radius: 6px;
   padding: 12px;
 }
 
-#lf-variants-root .lf-variants-combo-form {
+#lf_variants_panel #lf-variants-root .lf-variants-combo-form {
   display: grid;
   gap: 12px;
 }
 
-#lf-variants-root .lf-variants-combo-field label {
+#lf_variants_panel #lf-variants-root .lf-variants-combo-field label {
   display: block;
   font-weight: 600;
   margin-bottom: 4px;
 }
 
-#lf-variants-root .lf-variants-combo-actions {
+#lf_variants_panel #lf-variants-root .lf-variants-combo-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-#lf-variants-root .lf-variants-warning {
+#lf_variants_panel #lf-variants-root .lf-variants-warning {
   color: #d63638;
   margin: 0;
 }
 
-.lf-variants-section__header {
+#lf_variants_panel .lf-variants-section__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
 }
 
-.lf-variants-section__title {
+#lf_variants_panel .lf-variants-section__title {
   font-size: 15px;
   font-weight: 600;
   margin: 0;
 }
 
-.lf-variants-add {
+#lf_variants_panel .lf-variants-add {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.lf-variants-add select {
+#lf_variants_panel .lf-variants-add select {
   min-width: 180px;
 }
 
-.lf-variants-row {
+#lf_variants_panel .lf-variants-row {
   border: 1px solid #dcdcde;
   border-radius: 6px;
   padding: 12px;
@@ -117,42 +117,42 @@
   background: #fdfdfd;
 }
 
-.lf-variants-row__header {
+#lf_variants_panel .lf-variants-row__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
 }
 
-.lf-variants-row__title {
+#lf_variants_panel .lf-variants-row__title {
   font-weight: 600;
   margin: 0;
 }
 
-.lf-variants-row__actions {
+#lf_variants_panel .lf-variants-row__actions {
   display: flex;
   gap: 8px;
 }
 
-.lf-variants-row__body {
+#lf_variants_panel .lf-variants-row__body {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 16px;
   align-items: start;
   margin-top: 12px;
 }
 
-.lf-variants-row__body[hidden] {
+#lf_variants_panel .lf-variants-row__body[hidden] {
   display: none;
 }
 
-.lf-variants-media {
+#lf_variants_panel .lf-variants-media {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.lf-variants-media__preview {
+#lf_variants_panel .lf-variants-media__preview {
   align-items: center;
   background: #f3f4f5;
   border: 1px dashed #c3c4c7;
@@ -164,38 +164,50 @@
   position: relative;
 }
 
-.lf-variants-media__preview img {
+#lf_variants_panel .lf-variants-media__preview img {
   display: block;
   max-width: 100%;
   height: auto;
 }
 
-.lf-variants-field {
+#lf_variants_panel .lf-variants-field {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.lf-variants-field label {
+#lf_variants_panel .lf-variants-field label {
   font-weight: 600;
+  margin: 0;
+  width: fit-content;
+  float: none;
 }
 
-.lf-variants-affiliates {
+#lf_variants_panel .lf-variants-field input {
+  width: 100%;
+  float: none;
+}
+
+#lf_variants_panel .lf-variants-affiliates {
   border-top: 1px solid #e0e0e0;
   margin-top: 12px;
   padding-top: 12px;
   display: grid;
   gap: 10px;
+  grid-column: span 2;
 }
 
-.lf-variants-affiliates__item {
+#lf_variants_panel .lf-variants-affiliates__item {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.lf-variants-affiliates__item label {
-  font-weight: 500;
+#lf_variants_panel .lf-variants-affiliates__item label {
+  font-weight: 600;
+    margin: 0;
+    width: fit-content;
+    float: none;
 }
 
 .lf-variants-disabled {

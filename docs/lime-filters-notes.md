@@ -17,6 +17,9 @@
 - Added Product Background module (separate admin page + front-end wrapper CSS).
 - Admin mapping allows dedicated “Shop (All Products)” configuration and optional category filter.
 - Attribute Variants panel now lets admins pick participating attributes and build multi-attribute combinations (e.g., Color × Fuel Type) instead of configuring values one attribute at a time.
+- Merged the affiliate archive plugin into Lime Filters with its own WooCommerce submenu (enable toggle, customizable slug/per-page) and rewrite/pagination handling identical to Product Compare’s settings workflow.
+- Affiliate archives now include a category dropdown filter so shoppers can narrow each retailer view down to a specific product_cat without leaving the archive.
+- Variant combos gained a dedicated UPC field (stored alongside SKU) so merchandisers can manage per-attribute UPC overrides for feeds/affiliate tagging.
 
 ## Next Ideas / Follow-ups
 - Hook up additional behavior for the mobile “Sort & Filter” button (if needed).

@@ -40,12 +40,16 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
             'label' => __('Show Heading', 'lime-filters'),
             'type' => Controls_Manager::SWITCHER,
             'default' => 'yes',
+            'description' => __('Toggle to display or hide the block heading.', 'lime-filters'),
         ]);
 
         $this->add_control('heading_text', [
             'label' => __('Heading Text', 'lime-filters'),
             'type' => Controls_Manager::TEXT,
+            'placeholder' => __('e.g. Product Details', 'lime-filters'),
             'default' => __('Product Details', 'lime-filters'),
+            'label_block' => true,
+            'description' => __('Enter the title shown above the attribute pills.', 'lime-filters'),
             'condition' => [
                 'show_heading' => 'yes',
             ],
@@ -59,6 +63,7 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
                 'list' => __('List', 'lime-filters'),
                 'grid' => __('Grid', 'lime-filters'),
             ],
+            'description' => __('Choose how the attribute pills should be arranged.', 'lime-filters'),
         ]);
 
         $this->end_controls_section();
@@ -71,6 +76,7 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
         $this->add_control('pill_bg_color', [
             'label' => __('Background Color', 'lime-filters'),
             'type' => Controls_Manager::COLOR,
+            'description' => __('Customize the pill background to match your theme.', 'lime-filters'),
             'selectors' => [
                 '{{WRAPPER}} .lf-pill' => 'background-color: {{VALUE}};',
             ],
@@ -79,6 +85,7 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
         $this->add_control('pill_text_color', [
             'label' => __('Text Color', 'lime-filters'),
             'type' => Controls_Manager::COLOR,
+            'description' => __('Color used for the pill label text.', 'lime-filters'),
             'selectors' => [
                 '{{WRAPPER}} .lf-pill' => 'color: {{VALUE}};',
             ],
@@ -89,6 +96,7 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
             [
                 'name' => 'pill_border',
                 'selector' => '{{WRAPPER}} .lf-pill',
+                'description' => __('Optional border around each pill.', 'lime-filters'),
             ]
         );
 
@@ -96,6 +104,7 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
             'label' => __('Border Radius', 'lime-filters'),
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', 'em', '%'],
+            'description' => __('Adjust the pill corner rounding per device.', 'lime-filters'),
             'selectors' => [
                 '{{WRAPPER}} .lf-pill' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
@@ -105,6 +114,7 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
             'label' => __('Padding', 'lime-filters'),
             'type' => Controls_Manager::DIMENSIONS,
             'size_units' => ['px', 'em', '%'],
+            'description' => __('Fine-tune internal spacing for each pill.', 'lime-filters'),
             'selectors' => [
                 '{{WRAPPER}} .lf-pill' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
             ],
@@ -120,6 +130,7 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
                     'max' => 60,
                 ],
             ],
+            'description' => __('Control the spacing between individual pills.', 'lime-filters'),
             'selectors' => [
                 '{{WRAPPER}} .lf-attribute-group__pills' => 'gap: {{SIZE}}{{UNIT}};',
             ],
@@ -135,6 +146,7 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
         $this->add_control('attribute_label_color', [
             'label' => __('Attribute Label Color', 'lime-filters'),
             'type' => Controls_Manager::COLOR,
+            'description' => __('Set the color for the attribute group titles.', 'lime-filters'),
             'selectors' => [
                 '{{WRAPPER}} .lf-attribute-group__label' => 'color: {{VALUE}};',
             ],
