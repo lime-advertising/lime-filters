@@ -27,6 +27,13 @@ class LF_Admin {
         ]);
         register_setting('lime_filters_group', 'lime_filters_brand_colors');
         register_setting('lime_filters_group', 'lime_filters_shop_show_categories');
+        register_setting('lime_filters_group', 'lime_filters_affiliate_upsell', [
+            'type'              => 'string',
+            'sanitize_callback' => function($value) {
+                return $value === 'yes' ? 'yes' : 'no';
+            },
+            'default'           => 'no',
+        ]);
     }
 
     public static function assets($hook) {
@@ -231,6 +238,18 @@ class LF_Admin {
                       echo '<td><input type="text" class="lf-color-field" name="lime_filters_brand_colors['.esc_attr($key).']" value="'.esc_attr($val).'" /> </td></tr>';
                   }
                   ?>
+                  <tr>
+                    <th scope="row"><label for="lf-affiliate-upsell"><?php esc_html_e('Affiliate Upsell Modal','lime-filters'); ?></label></th>
+                    <td>
+                      <?php $upsell_enabled = get_option('lime_filters_affiliate_upsell', 'no'); ?>
+                      <label>
+                        <input type="hidden" name="lime_filters_affiliate_upsell" value="no" />
+                        <input type="checkbox" id="lf-affiliate-upsell" name="lime_filters_affiliate_upsell" value="yes" <?php checked($upsell_enabled, 'yes'); ?> />
+                        <?php esc_html_e('Enable accessory upsell modal after clicking affiliate buttons','lime-filters'); ?>
+                      </label>
+                      <p class="description"><?php esc_html_e('When disabled, affiliates open directly without prompting for upsell accessories.','lime-filters'); ?></p>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>

@@ -20,6 +20,8 @@
 - Merged the affiliate archive plugin into Lime Filters with its own WooCommerce submenu (enable toggle, customizable slug/per-page) and rewrite/pagination handling identical to Product Compare’s settings workflow.
 - Affiliate archives now include a category dropdown filter so shoppers can narrow each retailer view down to a specific product_cat without leaving the archive.
 - Variant combos gained a dedicated UPC field (stored alongside SKU) so merchandisers can manage per-attribute UPC overrides for feeds/affiliate tagging.
+- Added an “Affiliate Vendors” WooCommerce submenu to manage retailer slugs, labels, meta keys, and logos; helpers/archives now read from this option instead of hardcoded arrays (still filterable for extensions).
+- Added a global toggle (WooCommerce → Lime Filters) to enable/disable the affiliate upsell modal, defaulting to off until we revisit the flow.
 
 ## Next Ideas / Follow-ups
 - Hook up additional behavior for the mobile “Sort & Filter” button (if needed).

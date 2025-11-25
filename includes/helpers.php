@@ -238,45 +238,39 @@ class LF_Helpers {
     }
 
     public static function affiliate_stores() {
-        $base = LF_PLUGIN_URL . 'includes/compare/icons/compare-icons/';
-        $stores = [
-            'amazon'         => [
-                'label' => __('Amazon', 'lime-filters'),
-                'logo'  => $base . 'amazon-ico.svg',
-            ],
-            'best_buy'       => [
-                'label' => __('Best Buy', 'lime-filters'),
-                'logo'  => $base . 'best_buy-ico.svg',
-            ],
-            'rona'           => [
-                'label' => __('Rona', 'lime-filters'),
-                'logo'  => $base . 'rona-ico.svg',
-            ],
-            'the_home_depot' => [
-                'label' => __('Home Depot', 'lime-filters'),
-                'logo'  => $base . 'the_home_depot-ico.svg',
-            ],
-            'wayfair'        => [
-                'label' => __('Wayfair', 'lime-filters'),
-                'logo'  => $base . 'wayfair-ico.svg',
-            ],
-            'walmart'        => [
-                'label' => __('Walmart', 'lime-filters'),
-                'logo'  => $base . 'walmart-ico.svg',
-            ],
-        ];
+        $vendors = class_exists('LF_Affiliate_Vendors') ? LF_Affiliate_Vendors::vendors() : [];
+        if (empty($vendors) && class_exists('LF_Affiliate_Vendors')) {
+            $vendors = LF_Affiliate_Vendors::defaults();
+        }
+
+        $stores = [];
+        foreach ($vendors as $slug => $data) {
+            $stores[$slug] = [
+                'label' => isset($data['label']) ? $data['label'] : $slug,
+                'logo'  => isset($data['logo']) ? $data['logo'] : '',
+                'meta'  => isset($data['meta']) ? $data['meta'] : $slug,
+            ];
+        }
 
         return apply_filters('lime_filters_affiliate_stores', $stores);
     }
 
     public static function affiliate_link($product_id, $store_key) {
+        $meta_key = $store_key;
+        if (class_exists('LF_Affiliate_Vendors')) {
+            $vendors = LF_Affiliate_Vendors::vendors();
+            if (isset($vendors[$store_key]) && isset($vendors[$store_key]['meta'])) {
+                $meta_key = $vendors[$store_key]['meta'];
+            }
+        }
+
         $url = '';
         if (function_exists('get_field')) {
-            $url = get_field($store_key, $product_id);
+            $url = get_field($meta_key, $product_id);
         }
 
         if (!$url) {
-            $meta = get_post_meta($product_id, $store_key, true);
+            $meta = get_post_meta($product_id, $meta_key, true);
             if (is_string($meta) && $meta !== '') {
                 $url = $meta;
             }

@@ -24,6 +24,7 @@ add_action('plugins_loaded', function() {
     }
 
     // Includes
+    require_once LF_PLUGIN_DIR . 'includes/class-lf-affiliate-vendors.php';
     require_once LF_PLUGIN_DIR . 'includes/helpers.php';
     require_once LF_PLUGIN_DIR . 'includes/class-lf-admin.php';
     require_once LF_PLUGIN_DIR . 'includes/class-lf-frontend.php';
@@ -38,6 +39,7 @@ add_action('plugins_loaded', function() {
 
     // Init
     LF_Admin::init();
+    LF_Affiliate_Vendors::init();
     LF_Frontend::init();
     LF_AJAX::init();
     LF_Elementor_Widget::maybe_register();

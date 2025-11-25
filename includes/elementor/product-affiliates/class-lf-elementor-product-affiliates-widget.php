@@ -15,7 +15,8 @@ if (!class_exists('\\Elementor\\Widget_Base')) {
 
 class LF_Elementor_Product_Affiliates_Widget extends \Elementor\Widget_Base
 {
-    protected static $assets_enqueued = false;
+    protected static $base_assets_enqueued = false;
+    protected static $modal_assets_enqueued = false;
 
     public function get_name()
     {
@@ -178,7 +179,9 @@ class LF_Elementor_Product_Affiliates_Widget extends \Elementor\Widget_Base
             return;
         }
 
-        $this->ensure_assets();
+        $upsell_enabled = get_option('lime_filters_affiliate_upsell', 'no') === 'yes';
+
+        $this->ensure_assets($upsell_enabled);
 
         $desktop = max(1, min(6, (int) $settings['desktop_columns']));
         $tablet  = max(1, min(4, (int) $settings['tablet_columns']));
@@ -228,64 +231,64 @@ class LF_Elementor_Product_Affiliates_Widget extends \Elementor\Widget_Base
             echo $table_html;
         }
 
-        // Affiliate accessory modal container.
-        $upsell_products = LF_Helpers::upsell_products_for($product, 4);
-        $upsell_payload  = '';
-        if (is_array($upsell_products)) {
-            $encoded = wp_json_encode($upsell_products, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
-            if ($encoded !== false) {
-                $upsell_payload = $encoded;
+        if ($upsell_enabled) {
+            $upsell_products = LF_Helpers::upsell_products_for($product, 4);
+            $upsell_payload  = '';
+            if (is_array($upsell_products)) {
+                $encoded = wp_json_encode($upsell_products, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+                if ($encoded !== false) {
+                    $upsell_payload = $encoded;
+                }
             }
-        }
 
-        echo '<div class="lf-affiliates-upsell-modal" data-upsell-modal data-product-id="' . esc_attr($product_id) . '" hidden>';
-        echo '  <div class="lf-affiliates-upsell-modal__backdrop" data-upsell-close></div>';
-        echo '  <div class="lf-affiliates-upsell-modal__dialog" role="dialog" aria-modal="true" tabindex="-1">';
-        echo '    <div class="lf-affiliates-upsell-modal__content" data-upsell-content>';
-        echo '      <!-- Accessory cards rendered via JS -->';
-        echo '    </div>';
-        echo '  </div>';
-        if ($upsell_payload !== '') {
-            echo '  <script type="application/json" data-upsell-json data-product-id="' . esc_attr($product_id) . '">' . $upsell_payload . '</script>';
+            echo '<div class="lf-affiliates-upsell-modal" data-upsell-modal data-product-id="' . esc_attr($product_id) . '" hidden>';
+            echo '  <div class="lf-affiliates-upsell-modal__backdrop" data-upsell-close></div>';
+            echo '  <div class="lf-affiliates-upsell-modal__dialog" role="dialog" aria-modal="true" tabindex="-1">';
+            echo '    <div class="lf-affiliates-upsell-modal__content" data-upsell-content>';
+            echo '      <!-- Accessory cards rendered via JS -->';
+            echo '    </div>';
+            echo '  </div>';
+            if ($upsell_payload !== '') {
+                echo '  <script type="application/json" data-upsell-json data-product-id="' . esc_attr($product_id) . '">' . $upsell_payload . '</script>';
+            }
+            echo '</div>';
         }
-        echo '</div>';
         echo '</div>';
     }
 
-    protected function ensure_assets()
+    protected function ensure_assets($with_modal = true)
     {
-        if (self::$assets_enqueued) {
-            return;
+        if (!self::$base_assets_enqueued) {
+            wp_enqueue_style('lime-filters');
+
+            wp_enqueue_style(
+                'lf-product-affiliates',
+                LF_PLUGIN_URL . 'includes/elementor/product-affiliates/product-affiliates.css',
+                ['lime-filters'],
+                LF_VERSION
+            );
+
+            self::$base_assets_enqueued = true;
         }
 
-        wp_enqueue_style('lime-filters');
+        if ($with_modal && !self::$modal_assets_enqueued) {
+            wp_enqueue_style(
+                'lf-product-affiliates-modal',
+                LF_PLUGIN_URL . 'includes/elementor/product-affiliates/product-affiliates-modal.css',
+                ['lf-product-affiliates'],
+                LF_VERSION
+            );
 
-        wp_enqueue_style(
-            'lf-product-affiliates',
-            LF_PLUGIN_URL . 'includes/elementor/product-affiliates/product-affiliates.css',
-            ['lime-filters'],
-            LF_VERSION
-        );
+            wp_enqueue_script(
+                'lf-product-affiliates-modal',
+                LF_PLUGIN_URL . 'includes/elementor/product-affiliates/product-affiliates-modal.js',
+                [],
+                LF_VERSION,
+                true
+            );
 
-        wp_register_style(
-            'lf-product-affiliates-modal',
-            LF_PLUGIN_URL . 'includes/elementor/product-affiliates/product-affiliates-modal.css',
-            ['lf-product-affiliates'],
-            LF_VERSION
-        );
-
-        wp_register_script(
-            'lf-product-affiliates-modal',
-            LF_PLUGIN_URL . 'includes/elementor/product-affiliates/product-affiliates-modal.js',
-            [],
-            LF_VERSION,
-            true
-        );
-
-        wp_enqueue_style('lf-product-affiliates-modal');
-        wp_enqueue_script('lf-product-affiliates-modal');
-
-        self::$assets_enqueued = true;
+            self::$modal_assets_enqueued = true;
+        }
     }
 
     protected function get_product_category_options()

@@ -1,0 +1,19 @@
+#lf-affiliate-vendors .lf-affiliate-vendors__table th,
+#lf-affiliate-vendors .lf-affiliate-vendors__table td {
+  vertical-align: top;
+}
+
+#lf-affiliate-vendors .lf-affiliate-vendors__table input[type="text"],
+#lf-affiliate-vendors .lf-affiliate-vendors__table input[type="url"] {
+  width: 100%;
+}
+
+#lf-affiliate-vendors .lf-affiliate-vendors__actions {
+  width: 80px;
+  text-align: right;
+}
+
+#lf-affiliate-vendors .description {
+  margin: 4px 0 0;
+  color: #646970;
+}

@@ -145,7 +145,6 @@
   max-width: 120px;
   width: 100%;
   object-fit: contain;
-  filter: invert(1) brightness(0.9);
 }
 
 .lf-affiliates__table-link {
@@ -196,13 +195,11 @@
   max-width: 110px;
   width: 100%;
   object-fit: contain;
-  filter: invert(1) brightness(0.92);
   transition: transform 0.25s ease, filter 0.25s ease;
 }
 
 .lf-affiliates__table-link:hover img {
   transform: scale(1.04);
-  filter: invert(1) brightness(1.05);
 }
 
 .lf-affiliates__button.is-disabled,
@@ -212,10 +209,7 @@
   cursor: not-allowed;
 }
 
-.lf-affiliates__table-link[href*="bestbuy"]:hover img,
-.lf-affiliates__table-link[href*="amazon"]:hover img {
-  filter: invert(1) sepia(1) saturate(3) hue-rotate(35deg) brightness(1.1);
-}
+
 
 .lf-affiliates__table-label {
   font-weight: 700;

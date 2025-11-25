@@ -432,16 +432,20 @@ class LF_Affiliate_Archive {
     }
 
     protected static function stores() {
-        $defaults = [
-            'amazon'     => ['meta' => 'amazon', 'label' => __('Amazon', 'lime-filters')],
-            'best-buy'   => ['meta' => 'best_buy', 'label' => __('Best Buy', 'lime-filters')],
-            'home-depot' => ['meta' => 'the_home_depot', 'label' => __('The Home Depot', 'lime-filters')],
-            'rona'       => ['meta' => 'rona', 'label' => __('RONA', 'lime-filters')],
-            'wayfair'    => ['meta' => 'wayfair', 'label' => __('Wayfair', 'lime-filters')],
-            'walmart'    => ['meta' => 'walmart', 'label' => __('Walmart', 'lime-filters')],
-        ];
+        $vendors = class_exists('LF_Affiliate_Vendors') ? LF_Affiliate_Vendors::vendors() : [];
+        if (empty($vendors) && class_exists('LF_Affiliate_Vendors')) {
+            $vendors = LF_Affiliate_Vendors::defaults();
+        }
 
-        return apply_filters('lime_filters_affiliate_archive_stores', $defaults);
+        $stores = [];
+        foreach ($vendors as $slug => $data) {
+            $stores[$slug] = [
+                'meta'  => isset($data['meta']) ? $data['meta'] : $slug,
+                'label' => isset($data['label']) ? $data['label'] : $slug,
+            ];
+        }
+
+        return apply_filters('lime_filters_affiliate_archive_stores', $stores);
     }
 
     protected static function get_store($slug) {
