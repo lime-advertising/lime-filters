@@ -418,6 +418,48 @@
     }
   }
 
+  function hasCompleteSelection(productId, product) {
+    const selection = getSelection(productId);
+    const required = getRequiredAttributes(product);
+    if (!required.length) {
+      return Object.keys(selection).length > 0;
+    }
+    for (let i = 0; i < required.length; i++) {
+      if (!selection[required[i]]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function initializeSelections() {
+    document.querySelectorAll('.lf-pill.is-active[data-product-id][data-attribute][data-term]').forEach((pill) => {
+      const pid = pill.getAttribute('data-product-id');
+      const attr = pill.getAttribute('data-attribute');
+      const term = pill.getAttribute('data-term');
+      if (pid && attr && term) {
+        const selection = getSelection(pid);
+        selection[attr] = term;
+      }
+    });
+
+    Object.keys(products).forEach((pid) => {
+      const product = getProduct(pid);
+      if (!product || !hasCompleteSelection(pid, product)) {
+        return;
+      }
+      const selection = getSelection(pid);
+      const required = getRequiredAttributes(product);
+      const attrSlug = required.length ? required[0] : Object.keys(selection)[0];
+      const termSlug = attrSlug ? selection[attrSlug] : null;
+      if (attrSlug && termSlug) {
+        applyVariantSelection(pid, attrSlug, termSlug);
+      }
+    });
+  }
+
+  initializeSelections();
+
   document.addEventListener('click', (event) => {
     const button = event.target.closest('.lf-pill[data-product-id][data-attribute][data-term]');
     if (!button) {

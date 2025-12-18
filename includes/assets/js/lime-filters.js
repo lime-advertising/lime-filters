@@ -351,6 +351,7 @@
         } else {
           $root.after(resp.data.html);
         }
+        $(document.body).trigger('updated_wc_div');
         if (resp.data.pagination !== undefined) {
           const $pagination = $root.find('.lf-pagination').first();
           if ($pagination.length) {

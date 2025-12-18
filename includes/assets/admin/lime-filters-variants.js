@@ -48,7 +48,7 @@
     }
   }
 
-  const initialKeys = Object.keys(variants);
+  const initialKeys = variantKeysSorted();
   openVariantKey = initialKeys.length ? initialKeys[0] : null;
 
   function clone(source) {
@@ -105,10 +105,14 @@
   }
 
   function handleRowToggle(key) {
-    if (!key || openVariantKey === key) {
+    if (!key) {
       return;
     }
-    openVariantKey = key;
+    if (openVariantKey === key) {
+      openVariantKey = null;
+    } else {
+      openVariantKey = key;
+    }
     updateAccordionState();
   }
 
@@ -126,7 +130,7 @@
     }
 
     const hasOpen = openVariantKey && variants[openVariantKey];
-    if (!hasOpen) {
+    if (openVariantKey !== null && !hasOpen) {
       const keys = variantKeysSorted();
       openVariantKey = keys.length ? keys[0] : null;
     }
@@ -657,7 +661,7 @@
 
   function renderVariantList() {
     const section = createEl('div', 'lf-variants-section lf-variants-section--list');
-    const keys = Object.keys(variants);
+    const keys = variantKeysSorted();
     if (!keys.length) {
       openVariantKey = null;
       const empty = createEl('p', 'lf-variants-app__empty', i18n.addVariant || 'Add Combination');
@@ -665,14 +669,12 @@
       return section;
     }
 
-    keys
-      .sort()
-      .forEach((key) => {
-        const entry = variants[key];
-        if (entry) {
-          section.appendChild(renderVariantRow(entry));
-        }
-      });
+    keys.forEach((key) => {
+      const entry = variants[key];
+      if (entry) {
+        section.appendChild(renderVariantRow(entry));
+      }
+    });
 
     return section;
   }

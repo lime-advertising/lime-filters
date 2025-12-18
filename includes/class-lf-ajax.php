@@ -240,6 +240,9 @@ class LF_AJAX
             }
             $slugs = array_filter(array_map('sanitize_text_field', (array) $slugs));
             $slugs = array_values(array_unique($slugs));
+            if ($tax === 'product_cat' && $slugs) {
+                $slugs = self::normalize_category_slugs($slugs);
+            }
             if ($slugs) {
                 $sanitized[$tax] = array_values($slugs);
             }
@@ -260,6 +263,9 @@ class LF_AJAX
         }
 
         foreach ($filters as $tax => $slugs) {
+            if ($tax === 'product_cat') {
+                $slugs = self::expand_category_slugs($slugs);
+            }
             $tax_query[] = [
                 'taxonomy' => $tax,
                 'field'    => 'slug',
@@ -468,14 +474,24 @@ class LF_AJAX
 
         $counts = self::term_counts_for_products($taxonomy, $product_ids);
 
-        $terms = get_terms([
+        $term_args = [
             'taxonomy'   => $taxonomy,
             'hide_empty' => false,
             'orderby'    => 'name',
             'order'      => 'ASC',
-        ]);
+        ];
+        if ($taxonomy === 'product_cat') {
+            $term_args['parent'] = 0;
+            $selected_slugs = self::normalize_category_slugs($selected_slugs);
+        }
+
+        $terms = get_terms($term_args);
         if (is_wp_error($terms)) {
             $terms = [];
+        }
+
+        if ($taxonomy === 'product_cat') {
+            $counts = self::rollup_category_counts($counts, $terms);
         }
 
         $terms_by_slug = [];
@@ -483,11 +499,13 @@ class LF_AJAX
             $terms_by_slug[$term->slug] = $term;
         }
 
-        foreach ($selected_slugs as $slug) {
-            if (!isset($terms_by_slug[$slug])) {
-                $term = get_term_by('slug', $slug, $taxonomy);
-                if ($term && !is_wp_error($term)) {
-                    $terms_by_slug[$term->slug] = $term;
+        if ($taxonomy !== 'product_cat') {
+            foreach ($selected_slugs as $slug) {
+                if (!isset($terms_by_slug[$slug])) {
+                    $term = get_term_by('slug', $slug, $taxonomy);
+                    if ($term && !is_wp_error($term)) {
+                        $terms_by_slug[$term->slug] = $term;
+                    }
                 }
             }
         }
@@ -553,6 +571,80 @@ class LF_AJAX
         }
 
         return $counts;
+    }
+
+    protected static function normalize_category_slugs(array $slugs)
+    {
+        $normalized = [];
+        foreach ($slugs as $slug) {
+            $slug = sanitize_text_field($slug);
+            if ($slug === '') {
+                continue;
+            }
+            $term = get_term_by('slug', $slug, 'product_cat');
+            if (!$term || is_wp_error($term)) {
+                continue;
+            }
+            if ($term->parent) {
+                $ancestors = get_ancestors($term->term_id, 'product_cat');
+                $top_id = !empty($ancestors) ? (int) end($ancestors) : (int) $term->parent;
+                $top_term = get_term($top_id, 'product_cat');
+                if ($top_term && !is_wp_error($top_term)) {
+                    $slug = $top_term->slug;
+                }
+            }
+            $normalized[] = $slug;
+        }
+
+        return array_values(array_unique($normalized));
+    }
+
+    protected static function expand_category_slugs(array $slugs)
+    {
+        $expanded = [];
+        foreach ($slugs as $slug) {
+            $slug = sanitize_text_field($slug);
+            if ($slug === '') {
+                continue;
+            }
+            $term = get_term_by('slug', $slug, 'product_cat');
+            if (!$term || is_wp_error($term)) {
+                continue;
+            }
+            $expanded[] = $term->slug;
+
+            $children = get_term_children($term->term_id, 'product_cat');
+            if (is_wp_error($children) || empty($children)) {
+                continue;
+            }
+            foreach ($children as $child_id) {
+                $child = get_term($child_id, 'product_cat');
+                if ($child && !is_wp_error($child)) {
+                    $expanded[] = $child->slug;
+                }
+            }
+        }
+
+        return array_values(array_unique($expanded));
+    }
+
+    protected static function rollup_category_counts(array $counts, array $terms)
+    {
+        $rolled = [];
+        foreach ($terms as $term) {
+            $total = isset($counts[$term->term_id]) ? (int) $counts[$term->term_id] : 0;
+            $children = get_term_children($term->term_id, 'product_cat');
+            if (!is_wp_error($children) && !empty($children)) {
+                foreach ($children as $child_id) {
+                    if (isset($counts[$child_id])) {
+                        $total += (int) $counts[$child_id];
+                    }
+                }
+            }
+            $rolled[$term->term_id] = $total;
+        }
+
+        return $rolled;
     }
 
     protected static function sanitize_columns_request($columns)

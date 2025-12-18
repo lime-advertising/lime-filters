@@ -219,6 +219,7 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
         if (!is_array($variant_map)) {
             $variant_map = [];
         }
+        $initial_selection = $this->initial_variant_selection($variant_map);
         $term_variants = [];
         if (!empty($variant_map['variants']) && is_array($variant_map['variants'])) {
             foreach ($variant_map['variants'] as $variant) {
@@ -243,17 +244,38 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
                     continue;
                 }
                 $attr_slug = $attribute->get_name();
-                echo '<div class="lf-attribute-group">';
-                echo '<span class="lf-attribute-group__label">' . esc_html(wc_attribute_label($attr_slug)) . '</span>';
-                echo '<div class="lf-attribute-group__pills" data-attribute="' . esc_attr($attr_slug) . '">';
+                $prepared_terms = [];
+                $initial_slug = isset($initial_selection[$attr_slug]) ? $initial_selection[$attr_slug] : null;
+                $first_active_slug = null;
                 foreach ($terms as $term) {
                     $term_slug   = $term->slug;
                     $has_variant = isset($term_variants[$attr_slug][$term_slug]);
+                    if ($initial_slug !== null && $term_slug === $initial_slug) {
+                        $first_active_slug = $term_slug;
+                    } elseif ($first_active_slug === null && $has_variant) {
+                        $first_active_slug = $term_slug;
+                    }
+                    $prepared_terms[] = [
+                        'slug'        => $term_slug,
+                        'name'        => $term->name,
+                        'has_variant' => $has_variant,
+                    ];
+                }
+                if ($first_active_slug === null && $initial_slug !== null) {
+                    $first_active_slug = $initial_slug;
+                }
+                echo '<div class="lf-attribute-group">';
+                echo '<span class="lf-attribute-group__label">' . esc_html(wc_attribute_label($attr_slug)) . '</span>';
+                echo '<div class="lf-attribute-group__pills" data-attribute="' . esc_attr($attr_slug) . '">';
+                foreach ($prepared_terms as $term) {
                     $classes     = ['lf-pill'];
-                    if ($has_variant) {
+                    if ($term['has_variant']) {
                         $classes[] = 'has-variant';
                     }
-                    echo '<button type="button" class="' . esc_attr(implode(' ', $classes)) . '" title="' . esc_attr($term->name) . '" data-product-id="' . esc_attr($product_id) . '" data-attribute="' . esc_attr($attr_slug) . '" data-term="' . esc_attr($term_slug) . '" data-has-variant="' . ($has_variant ? '1' : '0') . '">' . esc_html($term->name) . '</button>';
+                    if ($term['slug'] === $first_active_slug) {
+                        $classes[] = 'is-active';
+                    }
+                    echo '<button type="button" class="' . esc_attr(implode(' ', $classes)) . '" title="' . esc_attr($term['name']) . '" data-product-id="' . esc_attr($product_id) . '" data-attribute="' . esc_attr($attr_slug) . '" data-term="' . esc_attr($term['slug']) . '" data-has-variant="' . ($term['has_variant'] ? '1' : '0') . '">' . esc_html($term['name']) . '</button>';
                 }
                 echo '</div></div>';
             } else {
@@ -262,17 +284,38 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
                     continue;
                 }
                 $attr_slug = $attribute->get_name();
-                echo '<div class="lf-attribute-group">';
-                echo '<span class="lf-attribute-group__label">' . esc_html($attribute->get_name()) . '</span>';
-                echo '<div class="lf-attribute-group__pills" data-attribute="' . esc_attr($attr_slug) . '">';
+                $prepared_options = [];
+                $initial_slug = isset($initial_selection[$attr_slug]) ? $initial_selection[$attr_slug] : null;
+                $first_active_slug = null;
                 foreach ($options as $option) {
                     $term_slug   = sanitize_title($option);
                     $has_variant = isset($term_variants[$attr_slug][$term_slug]);
+                    if ($initial_slug !== null && $term_slug === $initial_slug) {
+                        $first_active_slug = $term_slug;
+                    } elseif ($first_active_slug === null && $has_variant) {
+                        $first_active_slug = $term_slug;
+                    }
+                    $prepared_options[] = [
+                        'slug'        => $term_slug,
+                        'name'        => $option,
+                        'has_variant' => $has_variant,
+                    ];
+                }
+                if ($first_active_slug === null && $initial_slug !== null) {
+                    $first_active_slug = $initial_slug;
+                }
+                echo '<div class="lf-attribute-group">';
+                echo '<span class="lf-attribute-group__label">' . esc_html($attribute->get_name()) . '</span>';
+                echo '<div class="lf-attribute-group__pills" data-attribute="' . esc_attr($attr_slug) . '">';
+                foreach ($prepared_options as $option) {
                     $classes     = ['lf-pill'];
-                    if ($has_variant) {
+                    if ($option['has_variant']) {
                         $classes[] = 'has-variant';
                     }
-                    echo '<button type="button" class="' . esc_attr(implode(' ', $classes)) . '" title="' . esc_attr($option) . '" data-product-id="' . esc_attr($product_id) . '" data-attribute="' . esc_attr($attr_slug) . '" data-term="' . esc_attr($term_slug) . '" data-has-variant="' . ($has_variant ? '1' : '0') . '">' . esc_html($option) . '</button>';
+                    if ($option['slug'] === $first_active_slug) {
+                        $classes[] = 'is-active';
+                    }
+                    echo '<button type="button" class="' . esc_attr(implode(' ', $classes)) . '" title="' . esc_attr($option['name']) . '" data-product-id="' . esc_attr($product_id) . '" data-attribute="' . esc_attr($attr_slug) . '" data-term="' . esc_attr($option['slug']) . '" data-has-variant="' . ($option['has_variant'] ? '1' : '0') . '">' . esc_html($option['name']) . '</button>';
                 }
                 echo '</div></div>';
             }
@@ -293,5 +336,20 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
         }
 
         return null;
+    }
+
+    protected function initial_variant_selection(array $variant_map)
+    {
+        if (empty($variant_map['variants']) || !is_array($variant_map['variants'])) {
+            return [];
+        }
+
+        foreach ($variant_map['variants'] as $variant) {
+            if (!empty($variant['attributes']) && is_array($variant['attributes'])) {
+                return $variant['attributes'];
+            }
+        }
+
+        return [];
     }
 }
