@@ -271,22 +271,23 @@ class LF_Product_Variants {
             $sanitized['upc'] = $upc;
         }
 
-        if (isset($entry['affiliates']) && is_array($entry['affiliates'])) {
-            $affiliates = [];
-            foreach ($entry['affiliates'] as $store => $url) {
-                if (!in_array($store, $store_keys, true)) {
-                    continue;
+            if (isset($entry['affiliates']) && is_array($entry['affiliates'])) {
+                $affiliates = [];
+                foreach ($entry['affiliates'] as $store => $url) {
+                    if (!in_array($store, $store_keys, true)) {
+                        continue;
+                    }
+                    $url = is_string($url) ? trim($url) : '';
+                    if ($url === '') {
+                        $affiliates[$store] = '';
+                        continue;
+                    }
+                    $affiliates[$store] = esc_url_raw($url);
                 }
-                $url = is_string($url) ? trim($url) : '';
-                if ($url === '') {
-                    continue;
+                if (!empty($affiliates)) {
+                    $sanitized['affiliates'] = $affiliates;
                 }
-                $affiliates[$store] = esc_url_raw($url);
             }
-            if (!empty($affiliates)) {
-                $sanitized['affiliates'] = $affiliates;
-            }
-        }
 
         if (isset($entry['extras']) && is_array($entry['extras']) && !empty($entry['extras'])) {
             $sanitized['extras'] = array_map('wc_clean', $entry['extras']);
@@ -604,6 +605,11 @@ class LF_Product_Variants {
             if (isset($entry['affiliates']) && is_array($entry['affiliates'])) {
                 foreach ($entry['affiliates'] as $store => $url) {
                     if (!in_array($store, $store_keys, true)) {
+                        continue;
+                    }
+                    $url = is_string($url) ? trim($url) : '';
+                    if ($url === '') {
+                        $variant_entry['affiliates'][$store] = '';
                         continue;
                     }
                     $variant_entry['affiliates'][$store] = esc_url($url);

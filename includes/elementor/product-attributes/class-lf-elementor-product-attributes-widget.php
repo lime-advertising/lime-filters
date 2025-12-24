@@ -219,7 +219,7 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
         if (!is_array($variant_map)) {
             $variant_map = [];
         }
-        $initial_selection = $this->initial_variant_selection($variant_map);
+        $initial_selection = $this->initial_variant_selection($product, $variant_map);
         $term_variants = [];
         if (!empty($variant_map['variants']) && is_array($variant_map['variants'])) {
             foreach ($variant_map['variants'] as $variant) {
@@ -239,7 +239,14 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
         echo '<div class="' . esc_attr(implode(' ', $wrapper_classes)) . '" data-product-id="' . esc_attr($product_id) . '">';
         foreach ($attributes as $attribute) {
             if ($attribute->is_taxonomy()) {
-                $terms = wc_get_product_terms($product->get_id(), $attribute->get_name(), ['fields' => 'all']);
+                $orderby = wc_attribute_orderby($attribute->get_name());
+                $term_args = [
+                    'fields'     => 'all',
+                    'hide_empty' => false,
+                    'orderby'    => $orderby === 'menu_order' ? 'menu_order' : 'name',
+                    'order'      => 'ASC',
+                ];
+                $terms = wc_get_product_terms($product->get_id(), $attribute->get_name(), $term_args);
                 if (empty($terms)) {
                     continue;
                 }
@@ -338,16 +345,18 @@ class LF_Elementor_Product_Attributes_Widget extends \Elementor\Widget_Base {
         return null;
     }
 
-    protected function initial_variant_selection(array $variant_map)
+    protected function initial_variant_selection(WC_Product $product, array $variant_map)
     {
-        if (empty($variant_map['variants']) || !is_array($variant_map['variants'])) {
-            return [];
+        $defaults = [];
+        if (method_exists($product, 'get_default_attributes')) {
+            $defaults = $product->get_default_attributes();
+        }
+        if (!is_array($defaults)) {
+            $defaults = [];
         }
 
-        foreach ($variant_map['variants'] as $variant) {
-            if (!empty($variant['attributes']) && is_array($variant['attributes'])) {
-                return $variant['attributes'];
-            }
+        if (!empty($defaults)) {
+            return $defaults;
         }
 
         return [];

@@ -71,16 +71,19 @@
   }
 
   function mergeAffiliates(product, variant) {
-    const base = (product.default && product.default.affiliates) ? { ...product.default.affiliates } : {};
+    // If a variant is selected, use only its affiliates (non-empty). Otherwise fall back to product defaults.
     if (variant && variant.affiliates) {
+      const variantLinks = {};
       Object.keys(variant.affiliates).forEach((store) => {
         const url = variant.affiliates[store];
-        if (url) {
-          base[store] = url;
+        if (typeof url === 'string' && url.trim() !== '') {
+          variantLinks[store] = url;
         }
       });
+      return variantLinks;
     }
-    return base;
+
+    return (product.default && product.default.affiliates) ? { ...product.default.affiliates } : {};
   }
 
   function updateAffiliateLinks(productId, variant, product) {

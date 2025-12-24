@@ -55,6 +55,12 @@
     return JSON.parse(JSON.stringify(source || {}));
   }
 
+  function ensureAffiliatePlaceholders(entry) {
+    if (!entry.affiliates || typeof entry.affiliates !== 'object') {
+      entry.affiliates = {};
+    }
+  }
+
   function normalizeSelectedAttributes(list) {
     const normalized = [];
     list.forEach((slug) => {
@@ -151,17 +157,6 @@
     });
   }
 
-  function ensureAffiliatePlaceholders(entry) {
-    if (!entry.affiliates) {
-      entry.affiliates = {};
-    }
-    storeKeys.forEach((key) => {
-      if (typeof entry.affiliates[key] === 'undefined') {
-        entry.affiliates[key] = '';
-      }
-    });
-  }
-
   function normalizeVariantEntries(rawEntries) {
     const normalized = {};
     Object.keys(rawEntries).forEach((key) => {
@@ -195,7 +190,6 @@
         affiliates: clone(entry.affiliates || {}),
         extras: clone(entry.extras || {}),
       };
-      ensureAffiliatePlaceholders(normalized[resolvedKey]);
     });
 
     return normalized;
@@ -277,11 +271,11 @@
       if (entry.upc) {
         variantPayload.upc = entry.upc.trim();
       }
-      if (entry.affiliates) {
+      if (entry.affiliates && typeof entry.affiliates === 'object') {
         const affiliates = {};
         Object.keys(entry.affiliates).forEach((store) => {
           const value = entry.affiliates[store];
-          if (typeof value === 'string' && value.trim() !== '') {
+          if (typeof value === 'string') {
             affiliates[store] = value.trim();
           }
         });
@@ -341,6 +335,9 @@
     if (!storeKeys.length) {
       return;
     }
+    if (!entry.affiliates || typeof entry.affiliates !== 'object') {
+      entry.affiliates = {};
+    }
     const wrap = createEl('div', 'lf-variants-affiliates');
     storeKeys.forEach((storeKey) => {
       const meta = stores[storeKey] || {};
@@ -354,7 +351,9 @@
       input.value = entry.affiliates && entry.affiliates[storeKey] ? entry.affiliates[storeKey] : '';
       input.placeholder = i18n.affiliateLabel || 'Affiliate URL';
       input.addEventListener('input', () => {
-        ensureAffiliatePlaceholders(entry);
+        if (!entry.affiliates || typeof entry.affiliates !== 'object') {
+          entry.affiliates = {};
+        }
         entry.affiliates[storeKey] = input.value;
         syncHiddenField();
       });

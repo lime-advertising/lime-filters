@@ -159,10 +159,6 @@ class LF_Elementor_Product_Affiliates_Widget extends \Elementor\Widget_Base
         $product_id = $product->get_id();
         foreach ($stores as $key => $meta) {
             $url = LF_Helpers::affiliate_link($product_id, $key);
-            if (!$url) {
-                continue;
-            }
-
             $label = isset($meta['label']) ? $meta['label'] : ucfirst(str_replace('_', ' ', $key));
             $logo  = isset($meta['logo']) ? $meta['logo'] : '';
 
@@ -213,7 +209,14 @@ class LF_Elementor_Product_Affiliates_Widget extends \Elementor\Widget_Base
                 $label = $item['label'];
                 $has_logo = $item['logo'] !== '';
                 $button_classes = ['lf-affiliates__button', 'affiliate-button'];
-                echo '<a class="' . esc_attr(implode(' ', $button_classes)) . '" href="' . esc_url($item['url']) . '" target="_blank" rel="nofollow noopener noreferrer" data-store="' . esc_attr($item['store']) . '" data-affiliate-link="1" data-product-id="' . esc_attr($product_id) . '"' . ($sku ? ' data-sku="' . esc_attr($sku) . '"' : '') . '>';
+                $disabled = empty($item['url']);
+                if ($disabled) {
+                    $button_classes[] = 'is-disabled';
+                }
+                $href = $disabled ? '#' : $item['url'];
+                $target = $disabled ? '' : ' target="_blank" rel="nofollow noopener noreferrer"';
+                $aria = $disabled ? ' aria-disabled="true" tabindex="-1"' : '';
+                echo '<a class="' . esc_attr(implode(' ', $button_classes)) . '" href="' . esc_url($href) . '"' . $target . ' data-store="' . esc_attr($item['store']) . '" data-affiliate-link="1" data-product-id="' . esc_attr($product_id) . '"' . ($sku ? ' data-sku="' . esc_attr($sku) . '"' : '') . $aria . '>';
                 if ($has_logo) {
                     echo '<span class="lf-affiliates__logo">';
                     echo '<img src="' . esc_url($item['logo']) . '" alt="' . esc_attr($label) . '" loading="lazy" />';
@@ -399,9 +402,17 @@ class LF_Elementor_Product_Affiliates_Widget extends \Elementor\Widget_Base
             $href  = $item['url'];
             $store_key = $item['store'];
             $product_attr = $product_id ? ' data-product-id="' . esc_attr($product_id) . '"' : '';
+            $disabled = empty($href);
+
+            $link_classes = ['lf-affiliates__table-link', 'affiliate-button'];
+            if ($disabled) {
+                $link_classes[] = 'is-disabled';
+            }
+            $link_target = $disabled ? '' : ' target="_blank" rel="nofollow noopener noreferrer"';
+            $link_aria = $disabled ? ' aria-disabled="true" tabindex="-1"' : '';
 
             echo '<th scope="col" class="lf-affiliates__table-store">';
-            echo '<a class="lf-affiliates__table-link affiliate-button" href="' . esc_url($href) . '" target="_blank" rel="nofollow noopener noreferrer" data-store="' . esc_attr($store_key) . '" data-affiliate-link="1"' . ($sku ? ' data-sku="' . esc_attr($sku) . '"' : '') . $product_attr . '>';
+            echo '<a class="' . esc_attr(implode(' ', $link_classes)) . '" href="' . esc_url($disabled ? '#' : $href) . '"' . $link_target . ' data-store="' . esc_attr($store_key) . '" data-affiliate-link="1"' . ($sku ? ' data-sku="' . esc_attr($sku) . '"' : '') . $product_attr . $link_aria . '>';
             if ($logo) {
                 echo '<span class="lf-affiliates__table-logo"><img src="' . esc_url($logo) . '" alt="' . esc_attr($label) . '" loading="lazy" /></span>';
                 echo '<span class="lf-affiliates__table-label sr-only">' . esc_html($label) . '</span>';
